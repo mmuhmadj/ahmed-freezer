@@ -120,7 +120,7 @@
 /* عدّل بيانات المحل هنا قبل النشر */
 const SHOP = {
   name: "تلاجه ابوعلفه",
-  phone: "01096507121", // اكتب رقم واتساب بكود مصر 20 بدون + أو مسافات
+  phone: "201096507121", // اكتب رقم واتساب بكود مصر 20 بدون + أو مسافات
   phoneShow: "01096507121",
   address: "المنوفيه اشمون",
   hours: "يوميًا من 8 صباحًا إلى 12 مساءً",
@@ -183,7 +183,7 @@ $("#checkout").addEventListener("click",()=>{
   const total=ids.reduce((s,k)=>s+cart[k]*PRODUCTS[k].p,0);
   const msg=`أهلاً، عايز أطلب من تلاجه ابوعلفه
 :\n${lines}\nالإجمالي التقريبي: ${money(total)} (بدون التوصيل)\nالاسم:\nالعنوان:`;
-  if(SHOP.phone==="201096507121"){alert("من فضلك أضف رقم واتساب المحل في بيانات SHOP قبل استقبال الطلبات.");return}
+ 
   window.open(waLink(msg),"_blank","noopener");
 });
 renderCategories();renderProducts();updateCart();
