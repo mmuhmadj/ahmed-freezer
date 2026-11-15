@@ -114,10 +114,10 @@
 /* عدّل بيانات المحل هنا قبل النشر */
 const SHOP = {
   name: "تلاجة احمد ابو علفه",
-  phone: "201006028555", // اكتب رقم واتساب بكود مصر 20 بدون + أو مسافات
-  phoneShow: "01006028555",
+  phone: "201096507121", // اكتب رقم واتساب بكود مصر 20 بدون + أو مسافات
+  phoneShow: "201096507121",
   address: "المنوفيه اشمون",
-  hours: "يوميًا من 10 صباحًا إلى 11 مساءً",
+  hours: "يوميًا من 8 صباحًا إلى 11 مساءً",
   map: "https://maps.google.com/?q=تلاجة+احمد+ابو+علفه",
   delivery: "المنوفيه والشيخ زايد"
 };
@@ -176,7 +176,7 @@ $("#checkout").addEventListener("click",()=>{
   const lines=ids.map(k=>`• ${PRODUCTS[k].n}: ${cart[k]} ${PRODUCTS[k].u} = ${money(cart[k]*PRODUCTS[k].p)}`).join("\n");
   const total=ids.reduce((s,k)=>s+cart[k]*PRODUCTS[k].p,0);
   const msg=`أهلاً، عايز أطلب من تلاجة احمد ابو علفه:\n${lines}\nالإجمالي التقريبي: ${money(total)} (بدون التوصيل)\nالاسم:\nالعنوان:`;
-  if(SHOP.phone==="201006028555"){alert("من فضلك أضف رقم واتساب المحل في بيانات SHOP قبل استقبال الطلبات.");return}
+  window.open(waLink(msg),"_blank");
   window.open(waLink(msg),"_blank","noopener");
 });
 renderCategories();renderProducts();updateCart();
