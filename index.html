@@ -68,7 +68,99 @@
     .checkout{background:#20a66b;border:0;border-radius:11px;color:white;padding:11px 18px;font-weight:900;cursor:pointer}
     @media(max-width:900px){.products{grid-template-columns:repeat(3,1fr)}.hero-grid{gap:24px}.navlinks{gap:13px}}
     @media(max-width:650px){.container{width:min(100% - 24px,560px)}.topline .container{justify-content:center}.nav{height:68px}.brand{font-size:17px}.navlinks{display:none}.nav-cta{padding:9px 12px;font-size:12px}.hero{padding:35px 0 50px}.hero-grid{grid-template-columns:1fr}.hero-visual{min-height:220px}.hero-visual img{min-height:220px}.hero p{font-size:15px}.feature-grid{grid-template-columns:1fr}.feature{padding:12px}.features{margin-top:-20px}section{padding:40px 0}.section-head h2{font-size:25px}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.product-img{height:130px}.product-body{padding:10px}.product h3{font-size:14px}.price{font-size:16px}.add{padding:7px 9px}.about-grid{grid-template-columns:1fr}.about-art{min-height:210px}.contact-card{grid-template-columns:1fr}.cart-inner{align-items:center}.checkout{padding:10px 12px;font-size:12px}}
-  </style>
+ /* نافذة بيانات التوصيل */
+#checkoutModal[hidden] {
+  display: none !important;
+}
+
+#checkoutModal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0,0,0,.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  overflow-y: auto;
+}
+
+.checkout-box {
+  background: white;
+  width: 100%;
+  max-width: 450px;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 15px 50px #0004;
+}
+
+.checkout-box h2 {
+  color: var(--navy);
+  margin: 0 0 18px;
+  text-align: center;
+}
+
+.checkout-box label {
+  display: block;
+  margin: 12px 0 5px;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.checkout-box input,
+.checkout-box select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #f8fafb;
+  outline: none;
+  font-family: inherit;
+}
+
+.checkout-box input:focus,
+.checkout-box select:focus {
+  border-color: var(--green);
+}
+
+#deliveryFee,
+#finalTotal {
+  font-weight: 800;
+  color: var(--navy);
+  margin: 12px 0;
+}
+
+#finalTotal {
+  color: var(--green);
+  font-size: 19px;
+}
+
+#checkoutError {
+  color: var(--red);
+  font-size: 13px;
+}
+
+#confirmOrder,
+#closeCheckout {
+  width: 100%;
+  padding: 12px;
+  border: 0;
+  border-radius: 10px;
+  margin-top: 10px;
+  font-family: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+#confirmOrder {
+  background: #20a66b;
+  color: white;
+}
+
+#closeCheckout {
+  background: #edf1f3;
+  color: var(--navy);
+}</style>
 </head>
 <body>
   <div class="topline"><div class="container"><span>❄️ منتجات مختاره بعناية</span><span>للطلب والاستفسار تواصل معنا عبر واتساب</span></div></div>
@@ -115,10 +207,37 @@
     </div></section>
   </main>
   <footer><div class="container">© <span id="year"></span> تلاجه ابوعلفه - جميع الحقوق محفوظة</div></footer>
-  <div class="cartbar" id="cartBar"><div class="cart-inner"><div class="cart-total"><small id="cartCount">0 منتج</small><b id="cartTotal">0 ج.م</b></div><button class="checkout" id="checkout">إرسال الطلب على واتساب</button></div></div>
+  <div id="checkoutModal" hidden>
+  <div class="checkout-box">
+    <h2>بيانات التوصيل</h2>
+
+    <label>اسم العميل</label>
+    <input id="customerName" type="text" placeholder="اكتب اسمك">
+
+    <label>رقم الهاتف</label>
+    <input id="customerPhone" type="tel" placeholder="01xxxxxxxxx">
+
+    <label>المحافظة</label>
+    <select id="governorate">
+      <option value="">اختر المحافظة</option>
+    </select>
+
+    <label>المنطقة</label>
+    <select id="deliveryArea" disabled>
+      <option value="">اختر المنطقة</option>
+    </select>
+
+    <p id="deliveryFee">رسوم التوصيل: 0 ج.م</p>
+    <p id="finalTotal">الإجمالي: 0 ج.م</p>
+
+    <p id="checkoutError"></p>
+
+    <button id="confirmOrder">تأكيد الطلب على واتساب</button>
+    <button id="closeCheckout">إلغاء</button>
+  </div>
+</div><div class="cartbar" id="cartBar"><div class="cart-inner"><div class="cart-total"><small id="cartCount">0 منتج</small><b id="cartTotal">0 ج.م</b></div><button class="checkout" id="checkout">إرسال الطلب على واتساب</button></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-
 const SHOP = {
   name: "تلاجه ابوعلفه",
   phone: "201096507121",
@@ -135,11 +254,11 @@ const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const cart = {};
 let PRODUCTS = [];
+let DELIVERY_AREAS = [];
 let active = "الكل";
 
 const $ = s => document.querySelector(s);
 const money = n => Number(n).toLocaleString("en-US") + " ج.م";
-
 
 function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g, ch => ({
@@ -151,12 +270,55 @@ function escapeHTML(value) {
   })[ch]);
 }
 
-
 function waLink(message = "") {
   return "https://wa.me/" + SHOP.phone +
     (message ? "?text=" + encodeURIComponent(message) : "");
+}// تحميل إعدادات المحل من Supabase
+async function loadShopSettings() {
+  const { data, error } = await db
+    .from("shop_settings")
+    .select("*")
+    .eq("id", 1)
+    .single();
+
+  if (error) {
+    console.error("Shop settings error:", error);
+    return;
+  }
+
+  SHOP.name = data.store_name || SHOP.name;
+
+  if (data.whatsapp_phone) {
+    SHOP.phone = data.whatsapp_phone.replace(/\D/g, "");
+
+    SHOP.phoneShow = SHOP.phone.startsWith("20")
+      ? "0" + SHOP.phone.substring(2)
+      : SHOP.phone;
+  }
+
+  SHOP.address = data.address || SHOP.address;
+  SHOP.hours = data.working_hours || SHOP.hours;
+  SHOP.delivery = data.delivery_description || SHOP.delivery;
+
+  // تحديث اسم المحل
+  document.title = SHOP.name + " | لحوم وأسماك ودواجن مجمدة";
+
+  document.querySelector('meta[property="og:title"]').content = SHOP.name;
+
+  document.querySelector(".brand span:last-child").textContent = SHOP.name;
+
+  // تحديث بيانات التواصل
+  $("#shopAddress").textContent = SHOP.address;
+  $("#shopHours").textContent = SHOP.hours;
+  $("#shopPhone").textContent = SHOP.phoneShow;
+  $("#shopDelivery").textContent = SHOP.delivery;
+
+  // تحديث روابط واتساب
+  $("#topWhatsApp").href = waLink();
+  $("#heroWhatsApp").href = waLink();
 }
 
+// بيانات المحل
 $("#topWhatsApp").href = waLink();
 $("#heroWhatsApp").href = waLink();
 
@@ -166,6 +328,7 @@ $("#shopPhone").textContent = SHOP.phoneShow;
 $("#shopDelivery").textContent = SHOP.delivery;
 $("#year").textContent = new Date().getFullYear();
 
+// تحميل المنتجات
 async function loadProducts() {
   $("#productGrid").innerHTML =
     '<div class="empty">جاري تحميل المنتجات...</div>';
@@ -177,7 +340,7 @@ async function loadProducts() {
     .order("id");
 
   if (error) {
-    console.error("Supabase error:", error);
+    console.error("Products error:", error);
     $("#productGrid").innerHTML =
       '<div class="empty">حصلت مشكلة في تحميل المنتجات. حاول مرة أخرى.</div>';
     return;
@@ -190,8 +353,86 @@ async function loadProducts() {
   updateCart();
 }
 
+// تحميل مناطق التوصيل من Supabase
+async function loadDeliveryAreas() {
+  const { data, error } = await db
+    .from("delivery_areas")
+    .select("id, governorate, area, delivery_fee")
+    .eq("is_active", true)
+    .order("governorate")
+    .order("area");
+
+  if (error) {
+    console.error("Delivery areas error:", error);
+    return;
+  }
+
+  DELIVERY_AREAS = data || [];
+
+  const governorates = [
+    ...new Set(DELIVERY_AREAS.map(item => item.governorate))
+  ];
+
+  $("#governorate").innerHTML =
+    '<option value="">اختر المحافظة</option>' +
+    governorates.map(name =>
+      `<option value="${escapeHTML(name)}">${escapeHTML(name)}</option>`
+    ).join("");
+}
+
+// حساب إجمالي المنتجات
+function getCartTotal() {
+  return Object.keys(cart).reduce((sum, id) => {
+    const p = PRODUCTS.find(x => String(x.id) === id);
+    return sum + (p ? cart[id] * Number(p.price) : 0);
+  }, 0);
+}
+
+// تحديث رسوم التوصيل والإجمالي
+function updateDeliverySummary() {
+  const areaId = $("#deliveryArea").value;
+
+  const selected = DELIVERY_AREAS.find(
+    item => String(item.id) === areaId
+  );
+
+  const fee = selected ? Number(selected.delivery_fee) : 0;
+
+  $("#deliveryFee").textContent =
+    "رسوم التوصيل: " + money(fee);
+
+  $("#finalTotal").textContent =
+    "الإجمالي شامل التوصيل: " + money(getCartTotal() + fee);
+}
+
+// عند اختيار المحافظة
+$("#governorate").addEventListener("change", () => {
+  const governorate = $("#governorate").value;
+
+  const areas = DELIVERY_AREAS.filter(
+    item => item.governorate === governorate
+  );
+
+  $("#deliveryArea").innerHTML =
+    '<option value="">اختر المنطقة</option>' +
+    areas.map(item =>
+      `<option value="${item.id}">${escapeHTML(item.area)}</option>`
+    ).join("");
+
+  $("#deliveryArea").disabled = areas.length === 0;
+
+  updateDeliverySummary();
+});
+
+// عند اختيار المنطقة
+$("#deliveryArea").addEventListener("change", updateDeliverySummary);
+
+// عرض الأقسام
 function renderCategories() {
-  const cats = ["الكل", ...new Set(PRODUCTS.map(p => p.category).filter(Boolean))];
+  const cats = [
+    "الكل",
+    ...new Set(PRODUCTS.map(p => p.category).filter(Boolean))
+  ];
 
   $("#categories").innerHTML = cats.map(c => `
     <button class="cat-btn ${c === active ? "active" : ""}"
@@ -199,6 +440,7 @@ function renderCategories() {
   `).join("");
 }
 
+// عرض المنتجات
 function renderProducts() {
   const items = PRODUCTS.filter(p =>
     active === "الكل" || p.category === active
@@ -233,21 +475,20 @@ function renderProducts() {
   `).join("") || '<div class="empty">لا توجد منتجات في هذا القسم</div>';
 }
 
+// تحديث السلة
 function updateCart() {
   const ids = Object.keys(cart).filter(id => cart[id] > 0);
 
   const count = ids.reduce((s, id) => s + cart[id], 0);
 
-  const total = ids.reduce((s, id) => {
-    const product = PRODUCTS.find(p => String(p.id) === id);
-    return s + (product ? cart[id] * Number(product.price) : 0);
-  }, 0);
+  const total = getCartTotal();
 
   $("#cartBar").classList.toggle("show", ids.length > 0);
   $("#cartCount").textContent = count + " كجم / وحدة";
   $("#cartTotal").textContent = "الإجمالي التقريبي: " + money(total);
 }
 
+// الضغط على الأقسام
 $("#categories").addEventListener("click", e => {
   const b = e.target.closest("[data-cat]");
   if (!b) return;
@@ -257,6 +498,7 @@ $("#categories").addEventListener("click", e => {
   renderProducts();
 });
 
+// التحكم في المنتجات والسلة
 $("#productGrid").addEventListener("click", e => {
   const add = e.target.closest("[data-add]");
   const change = e.target.closest("[data-change]");
@@ -268,38 +510,101 @@ $("#productGrid").addEventListener("click", e => {
 
   if (change) {
     const id = change.dataset.id;
-    cart[id] = Math.max(0, (cart[id] || 0) + Number(change.dataset.change));
+    cart[id] = Math.max(
+      0,
+      (cart[id] || 0) + Number(change.dataset.change)
+    );
   }
 
   renderProducts();
   updateCart();
 });
 
+// فتح نافذة بيانات التوصيل
 $("#checkout").addEventListener("click", () => {
+  if (!Object.keys(cart).some(id => cart[id] > 0)) return;
+
+  $("#checkoutError").textContent = "";
+  $("#customerName").value = "";
+  $("#customerPhone").value = "";
+  $("#governorate").value = "";
+
+  $("#deliveryArea").innerHTML =
+    '<option value="">اختر المنطقة</option>';
+
+  $("#deliveryArea").disabled = true;
+
+  updateDeliverySummary();
+  $("#checkoutModal").hidden = false;
+});
+
+// إغلاق النافذة
+$("#closeCheckout").addEventListener("click", () => {
+  $("#checkoutModal").hidden = true;
+});
+
+// تأكيد الطلب وإرساله إلى واتساب
+$("#confirmOrder").addEventListener("click", () => {
+  const name = $("#customerName").value.trim();
+  const phone = $("#customerPhone").value.trim();
+  const governorate = $("#governorate").value;
+  const areaId = $("#deliveryArea").value;
+
+  const selectedArea = DELIVERY_AREAS.find(
+    item => String(item.id) === areaId
+  );
+
+  if (!name || !phone || !governorate || !selectedArea) {
+    $("#checkoutError").textContent =
+      "من فضلك املأ جميع البيانات واختر منطقة التوصيل";
+    return;
+  }
+
   const ids = Object.keys(cart).filter(id => cart[id] > 0);
-  if (!ids.length) return;
+
+  if (!ids.length) {
+    $("#checkoutError").textContent = "السلة فارغة";
+    return;
+  }
 
   const lines = ids.map(id => {
     const p = PRODUCTS.find(x => String(x.id) === id);
     if (!p) return "";
 
-    return `• ${p.name}: ${cart[id]} ${p.unit || "كجم"} = ${
-      money(cart[id] * Number(p.price))
-    }`;
+    return `• ${p.name}: ${cart[id]} ${p.unit || "كجم"} = ${money(cart[id] * Number(p.price))}`;
   }).filter(Boolean).join("\n");
 
-  const total = ids.reduce((s, id) => {
-    const p = PRODUCTS.find(x => String(x.id) === id);
-    return s + (p ? cart[id] * Number(p.price) : 0);
-  }, 0);
+  const total = getCartTotal();
+  const fee = Number(selectedArea.delivery_fee);
+  const finalTotal = total + fee;
 
-  const msg = `أهلاً، عايز أطلب من ${SHOP.name}:\n${lines}\nالإجمالي التقريبي: ${money(total)} (بدون التوصيل)\nالاسم:\nالعنوان:`;
+  const msg =
+`أهلاً، عايز أطلب من ${SHOP.name}:
+
+${lines}
+
+اسم العميل: ${name}
+رقم الهاتف: ${phone}
+المحافظة: ${governorate}
+المنطقة: ${selectedArea.area}
+
+إجمالي المنتجات: ${money(total)}
+رسوم التوصيل: ${money(fee)}
+الإجمالي شامل التوصيل: ${money(finalTotal)}`;
 
   window.open(waLink(msg), "_blank", "noopener");
+  $("#checkoutModal").hidden = true;
 });
 
-loadProducts();
+// تشغيل الموقع والإعدادات
+async function initStore() {
+  await loadShopSettings();
 
+  await Promise.all([
+    loadProducts(),
+    loadDeliveryAreas()
+  ]);
+}
+
+initStore();
 </script>
-</body>
-</html>
