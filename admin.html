@@ -332,6 +332,14 @@ hr{border:0;border-top:1px solid var(--border);margin:22px 0}
     <label>عنوان المحل</label>
     <input id="shopAddress">
 
+    <label>رابط موقع المحل على الخريطة</label>
+    <input
+      id="mapUrl"
+      type="url"
+      placeholder="https://maps.google.com/..."
+    >
+    <p class="muted">ضع رابط مشاركة موقع المحل من خرائط Google، وسيظهر زر فتح الخريطة في صفحة المتجر.</p>
+
     <label>مواعيد العمل</label>
     <input id="workingHours">
 
@@ -502,6 +510,7 @@ async function loadShopSettings(){
   $("storeName").value = data.store_name || "";
   $("whatsappPhone").value = data.whatsapp_phone || "";
   $("shopAddress").value = data.address || "";
+  $("mapUrl").value = data.map_url || "";
   $("workingHours").value = data.working_hours || "";
   $("deliveryDescription").value = data.delivery_description || "";
 }
@@ -514,6 +523,7 @@ async function saveSettings(){
     store_name:$("storeName").value.trim(),
     whatsapp_phone:$("whatsappPhone").value.trim(),
     address:$("shopAddress").value.trim(),
+    map_url:$("mapUrl").value.trim(),
     working_hours:$("workingHours").value.trim(),
     delivery_description:$("deliveryDescription").value.trim(),
     updated_at:new Date().toISOString()
