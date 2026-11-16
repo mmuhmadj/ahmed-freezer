@@ -1,0 +1,358 @@
+
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>لوحة إدارة تلاجة أبو علفة</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f3f6f7;color:#183342;font-family:Tahoma,Arial,sans-serif}
+.container{max-width:1000px;margin:30px auto;padding:16px}
+header{background:#102d3d;color:white;padding:22px;border-radius:15px;margin-bottom:20px}
+h1{margin:0;font-size:23px}
+.card{background:white;padding:20px;border-radius:14px;margin-bottom:18px;box-shadow:0 3px 15px #0000000a}
+h2{font-size:19px;margin-top:0}
+input,button{font:inherit}
+input[type="text"],input[type="email"],input[type="password"],input[type="number"],input[type="file"],textarea{
+width:100%;padding:12px;border:1px solid #dce4e8;border-radius:9px;margin:7px 0 13px;background:white
+}
+textarea{min-height:75px}
+label{font-weight:bold;font-size:14px}
+button{border:0;border-radius:9px;padding:11px 17px;background:#102d3d;color:white;cursor:pointer;font-weight:bold}
+button:hover{opacity:.9}
+.green{background:#18865b}
+.red{background:#c83f36}
+.gray{background:#647780}
+.hidden{display:none!important}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+table{width:100%;border-collapse:collapse}
+th,td{padding:11px;border-bottom:1px solid #e7edef;text-align:right;font-size:14px}
+td img{width:55px;height:48px;object-fit:cover;border-radius:7px}
+.status{color:#18865b;font-weight:bold}
+.muted{color:#687b83;font-size:13px}
+#message{margin:12px 0;font-weight:bold}
+@media(max-width:600px){.grid{grid-template-columns:1fr}.container{margin:10px auto;padding:10px}.card{padding:14px}table{font-size:12px}th,td{padding:7px}}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>❄️ لوحة إدارة تلاجة أبو علفة</h1>
+<p>إدارة المنتجات والأسعار والصور</p>
+</header>
+
+<div id="login" class="card">
+<h2>تسجيل دخول الأدمن</h2>
+<label>البريد الإلكتروني</label>
+<input id="email" type="email" placeholder="اكتب إيميل الأدمن">
+<label>كلمة المرور</label>
+<input id="password" type="password" placeholder="كلمة المرور">
+<button id="loginBtn" class="green">دخول</button>
+<div id="loginMessage"></div>
+</div>
+
+<div id="dashboard" class="hidden">
+<div class="card">
+<div class="actions">
+<h2 style="flex:1">مرحبًا بك في لوحة التحكم</h2>
+<button id="logoutBtn" class="red">تسجيل الخروج</button>
+</div>
+</div>
+
+<div class="card">
+<h2 id="formTitle">إضافة منتج جديد</h2>
+<form id="productForm">
+<input type="hidden" id="productId">
+
+<label>اسم المنتج</label>
+<input id="name" type="text" required placeholder="مثال: سمكة بوري">
+
+<div class="grid">
+<div>
+<label>القسم</label>
+<input id="category" type="text" required placeholder="لحوم أو أسماك أو دواجن">
+</div>
+<div>
+<label>السعر</label>
+<input id="price" type="number" min="0" step="0.01" required placeholder="السعر">
+</div>
+</div>
+
+<div class="grid">
+<div>
+<label>الوحدة</label>
+<input id="unit" type="text" value="كجم" placeholder="كجم أو قطعة">
+</div>
+<div>
+<label>صورة المنتج</label>
+<input id="image" type="file" accept="image/*">
+</div>
+</div>
+
+<label>وصف المنتج (اختياري)</label>
+<textarea id="description" placeholder="وصف مختصر للمنتج"></textarea>
+
+<label>
+<input id="active" type="checkbox" checked style="width:auto">
+ المنتج نشط ويظهر للعملاء
+</label>
+
+<div class="actions" style="margin-top:16px">
+<button type="submit" class="green" id="saveBtn">حفظ المنتج</button>
+<button type="button" class="gray hidden" id="cancelBtn">إلغاء التعديل</button>
+</div>
+</form>
+<div id="message"></div>
+</div>
+
+<div class="card">
+<h2>المنتجات الموجودة</h2>
+<p class="muted">تقدر تعدل أو تحذف أي منتج من هنا.</p>
+<div style="overflow-x:auto">
+<table>
+<thead>
+<tr>
+<th>الصورة</th>
+<th>المنتج</th>
+<th>السعر</th>
+<th>الحالة</th>
+<th>الإجراءات</th>
+</tr>
+</thead>
+<tbody id="productsList">
+<tr><td colspan="5">جاري التحميل...</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+const SUPABASE_URL = "https://dpfqzhateshqbqpksirv.supabase.co";
+const SUPABASE_KEY = "sb_publishable_IoXBVyRmLEEuXQKe0-x27A_rJtS2cxU";
+
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const $ = id => document.getElementById(id);
+
+function message(text, error=false) {
+  $("message").textContent = text;
+  $("message").style.color = error ? "#c83f36" : "#18865b";
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;",
+    '"':"&quot;", "'":"&#39;"
+  })[ch]);
+}
+
+async function checkAdmin() {
+  const {data:{session}} = await db.auth.getSession();
+
+  if (!session) {
+    $("login").classList.remove("hidden");
+    $("dashboard").classList.add("hidden");
+    return;
+  }
+
+  const {data, error} = await db.rpc("is_admin");
+
+  if (error || data !== true) {
+    await db.auth.signOut();
+    $("loginMessage").textContent = "هذا الحساب غير مصرح له بالدخول كأدمن.";
+    $("login").classList.remove("hidden");
+    $("dashboard").classList.add("hidden");
+    return;
+  }
+
+  $("login").classList.add("hidden");
+  $("dashboard").classList.remove("hidden");
+  await loadProducts();
+}
+
+$("loginBtn").addEventListener("click", async () => {
+  const email = $("email").value.trim();
+  const password = $("password").value;
+
+  $("loginMessage").textContent = "جاري تسجيل الدخول...";
+
+  const {error} = await db.auth.signInWithPassword({email,password});
+
+  if (error) {
+    $("loginMessage").textContent = "تعذر تسجيل الدخول: " + error.message;
+    return;
+  }
+
+  await checkAdmin();
+});
+
+$("logoutBtn").addEventListener("click", async () => {
+  await db.auth.signOut();
+  location.reload();
+});
+
+async function uploadImage(file) {
+  if (!file) return null;
+
+  if (!file.type.startsWith("image/")) {
+    throw new Error("اختار ملف صورة صحيح.");
+  }
+
+  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+  const path = Date.now() + "-" + safeName;
+
+  const {error} = await db.storage
+    .from("product-images")
+    .upload(path, file);
+
+  if (error) throw error;
+
+  const {data} = db.storage
+    .from("product-images")
+    .getPublicUrl(path);
+
+  return data.publicUrl;
+}
+
+async function loadProducts() {
+  $("productsList").innerHTML = "<tr><td colspan='5'>جاري التحميل...</td></tr>";
+
+  const {data,error} = await db
+    .from("products")
+    .select("id,name,category,price,unit,image_url,is_active,description")
+    .order("id");
+
+  if (error) {
+    $("productsList").innerHTML = "<tr><td colspan='5'>خطأ في تحميل المنتجات: " + escapeHTML(error.message) + "</td></tr>";
+    return;
+  }
+
+  $("productsList").innerHTML = (data || []).map(p => `
+    <tr>
+      <td>${p.image_url ? `<img src="${escapeHTML(p.image_url)}" alt="">` : "بدون صورة"}</td>
+      <td>${escapeHTML(p.name)}</td>
+      <td>${escapeHTML(p.price)} ج.م</td>
+      <td>${p.is_active ? "نشط" : "مخفي"}</td>
+      <td>
+        <div class="actions">
+          <button data-edit="${p.id}">تعديل</button>
+          <button class="red" data-delete="${p.id}">حذف</button>
+        </div>
+      </td>
+    </tr>
+  `).join("") || "<tr><td colspan='5'>لا توجد منتجات</td></tr>";
+}
+
+$("productForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  $("saveBtn").disabled = true;
+  message("جاري حفظ المنتج...");
+
+  try {
+    const id = $("productId").value;
+    const file = $("image").files[0];
+
+    let imageUrl = null;
+
+    if (file) {
+      imageUrl = await uploadImage(file);
+    }
+
+    const product = {
+      name: $("name").value.trim(),
+      category: $("category").value.trim(),
+      price: Number($("price").value),
+      unit: $("unit").value.trim() || "كجم",
+      description: $("description").value.trim(),
+      is_active: $("active").checked
+    };
+
+    if (imageUrl) product.image_url = imageUrl;
+
+    let result;
+
+    if (id) {
+      result = await db.from("products").update(product).eq("id",id);
+    } else {
+      result = await db.from("products").insert(product);
+    }
+
+    if (result.error) throw result.error;
+
+    message("تم حفظ المنتج بنجاح ❤️");
+    resetForm();
+    await loadProducts();
+
+  } catch (error) {
+    message("حصل خطأ: " + error.message, true);
+  } finally {
+    $("saveBtn").disabled = false;
+  }
+});
+
+$("productsList").addEventListener("click", async e => {
+  const editId = e.target.dataset.edit;
+  const deleteId = e.target.dataset.delete;
+
+  if (editId) {
+    const {data,error} = await db.from("products")
+      .select("*").eq("id",editId).single();
+
+    if (error) {
+      message(error.message,true);
+      return;
+    }
+
+    $("productId").value = data.id;
+    $("name").value = data.name || "";
+    $("category").value = data.category || "";
+    $("price").value = data.price;
+    $("unit").value = data.unit || "كجم";
+    $("description").value = data.description || "";
+    $("active").checked = data.is_active;
+    $("image").value = "";
+
+    $("formTitle").textContent = "تعديل المنتج";
+    $("saveBtn").textContent = "حفظ التعديلات";
+    $("cancelBtn").classList.remove("hidden");
+
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+
+  if (deleteId) {
+    if (!confirm("هل أنت متأكد من حذف هذا المنتج؟")) return;
+
+    const {error} = await db.from("products").delete().eq("id",deleteId);
+
+    if (error) {
+      message("تعذر الحذف: " + error.message,true);
+      return;
+    }
+
+    message("تم حذف المنتج.");
+    await loadProducts();
+  }
+});
+
+function resetForm() {
+  $("productForm").reset();
+  $("productId").value = "";
+  $("active").checked = true;
+  $("unit").value = "كجم";
+  $("formTitle").textContent = "إضافة منتج جديد";
+  $("saveBtn").textContent = "حفظ المنتج";
+  $("cancelBtn").classList.add("hidden");
+}
+
+$("cancelBtn").addEventListener("click", resetForm);
+
+checkAdmin();
+</script>
+</body>
+</html>
