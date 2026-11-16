@@ -12,6 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
   <style>
     :root{--navy:#102d3d;--navy2:#173f52;--red:#d94a3d;--ice:#eaf3f6;--bg:#f6f8f8;--ink:#172b35;--muted:#687b83;--white:#fff;--line:#e2e9eb;--green:#18865b;--shadow:0 12px 34px rgba(16,45,61,.09)}
     *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:"Cairo",Tahoma,sans-serif;line-height:1.7;padding-bottom:88px}
@@ -65,6 +66,7 @@
     .checkout{background:#20a66b;border:0;border-radius:11px;color:white;padding:11px 18px;font-weight:900;cursor:pointer}
     @media(max-width:900px){.products{grid-template-columns:repeat(3,1fr)}.hero-grid{gap:24px}.navlinks{gap:13px}}
     @media(max-width:650px){.container{width:min(100% - 24px,560px)}.topline .container{justify-content:center}.nav{height:68px}.brand{font-size:17px}.navlinks{display:none}.nav-cta{padding:9px 12px;font-size:12px}.hero{padding:35px 0 50px}.hero-grid{grid-template-columns:1fr}.hero-visual{min-height:220px}.hero-visual img{min-height:220px}.hero p{font-size:15px}.feature-grid{grid-template-columns:1fr}.feature{padding:12px}.features{margin-top:-20px}section{padding:40px 0}.section-head h2{font-size:25px}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.product-img{height:130px}.product-body{padding:10px}.product h3{font-size:14px}.price{font-size:16px}.add{padding:7px 9px}.about-grid{grid-template-columns:1fr}.about-art{min-height:210px}.contact-card{grid-template-columns:1fr}.cart-inner{align-items:center}.checkout{padding:10px 12px;font-size:12px}}
+
     /* نافذة بيانات التوصيل */
     #checkoutModal[hidden]{display:none!important}
     #checkoutModal{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:15px;overflow-y:auto}
@@ -83,12 +85,14 @@
 </head>
 <body>
   <div class="topline"><div class="container"><span>❄️ منتجات مختاره بعناية</span><span>للطلب والاستفسار تواصل معنا عبر واتساب</span></div></div>
+
   <header>
     <div class="container nav">
       <a class="brand" href="#"><span class="logo">❄</span><span>تلاجه ابوعلفه</span></a>
       <nav class="navlinks"><a href="#home">الرئيسية</a><a href="#products">المنتجات</a><a href="#about">عن المحل</a><a href="#contact">تواصل معنا</a></nav>
       <a class="nav-cta" id="topWhatsApp" href="#">اطلب على واتساب</a>
     </div>
+
     <div class="hero" id="home"><div class="container hero-grid">
       <div>
         <span class="eyebrow">❄️ أهلاً بيك في تلاجه ابوعلفه</span>
@@ -99,29 +103,69 @@
       <div class="hero-visual"><img src="https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=1200&q=85" alt="لحوم طازجة ومجهزة"><div class="hero-tag">جودة تختارها بكل سهولة</div></div>
     </div></div>
   </header>
+
   <div class="features"><div class="container feature-grid">
     <div class="feature"><span class="feature-icon">🧊</span><div><b>منتجات مجمدة بعناية</b><small>اهتمام بالتخزين والتعبئة</small></div></div>
     <div class="feature"><span class="feature-icon">🛒</span><div><b>طلب سهل وسريع</b><small>اختار احتياجاتك من الموقع</small></div></div>
     <div class="feature"><span class="feature-icon">🚚</span><div><b>توصيل للمنزل</b><small>اسألنا عن مناطق ورسوم التوصيل</small></div></div>
   </div></div>
+
   <main>
     <section id="products"><div class="container">
       <div class="section-head"><span>تسوق براحتك</span><h2>منتجاتنا</h2><p>اختار القسم وشوف المنتجات والأسعار</p></div>
       <div class="category-row" id="categories"></div><div class="products" id="productGrid"></div>
     </div></section>
+
     <section class="about" id="about"><div class="container about-grid">
       <div class="about-art"><img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1000&q=85" alt="تجهيز الطعام والمنتجات"></div>
       <div><span class="eyebrow" style="background:#dcebf0;color:#173f52;border-color:#c8dce4">عن تلاجه ابوعلفه</span><h2>كل احتياجاتك المجمده في مكان واحد</h2><p>بنساعدك تختار من مجموعة منتجات اللحوم والدواجن والأسماك المجمدة. اطلب المنتجات اللي محتاجها، وفريقنا هيتواصل معاك لتأكيد الطلب والتوصيل.</p><a class="btn" href="#contact">بيانات التواصل</a></div>
     </div></section>
+
     <section id="contact"><div class="container"><div class="section-head"><span>إحنا في خدمتك</span><h2>تواصل معانا</h2><p></p></div>
       <div class="contact-card">
         <div class="contact-item"><i>📍</i><div><b>العنوان</b><small id="shopAddress"></small></div></div>
         <div class="contact-item"><i>🕒</i><div><b>مواعيد العمل</b><small id="shopHours"></small></div></div>
-        <div class="contact-item"><i>📞</i><div><b>رقم الهاتف</b><small id="shopPhone"></small></div></div>
-        <div class="contact-item"><i>🚚</i><div><b>التوصيل</b><small id="shopDelivery"></small></div></div>
+
+        <!-- رقم الهاتف وأزرار الاتصال والواتساب -->
+        <div class="contact-item">
+          <i>📞</i>
+          <div>
+            <b>رقم الهاتف</b>
+            <small id="shopPhone"></small>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+              <a id="callShop" class="btn" href="tel:+201096507121"
+                 style="background:#18865b;padding:7px 13px;font-size:12px">
+                📞 اتصال بالمحل
+              </a>
+              <a id="contactWhatsApp" class="btn" href="https://wa.me/201096507121"
+                 target="_blank" rel="noopener"
+                 style="padding:7px 13px;font-size:12px">
+                واتساب
+              </a>
+            </div>
+          </div>
+        </div>
+
+      <div class="contact-item">
+  <i>🚚</i>
+  <div style="width:100%">
+    <b>التوصيل</b>
+    <small id="shopDelivery"></small>
+
+    <details style="margin-top:10px">
+      <summary style="cursor:pointer;color:#18865b;font-weight:800">
+        📍 اعرف مناطق التوصيل والرسوم
+      </summary>
+      <div id="deliveryAreasList" style="margin-top:12px">
+        جاري تحميل المناطق...
+      </div>
+    </details>
+  </div>
+</div>
       </div>
     </div></section>
   </main>
+
   <footer><div class="container">© <span id="year"></span> تلاجه ابوعلفه - جميع الحقوق محفوظة</div></footer>
 
   <div id="checkoutModal" hidden>
@@ -160,7 +204,6 @@ const SUPABASE_URL = "https://dpfqzhateshqbqpksirv.supabase.co";
 const SUPABASE_KEY = "sb_publishable_IoXBVyRmLEEuXQKe0-x27A_rJtS2cxU";
 
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
 const cart = {};
 let PRODUCTS = [];
 let DELIVERY_AREAS = [];
@@ -222,11 +265,17 @@ async function loadShopSettings() {
 
   $("#topWhatsApp").href = waLink();
   $("#heroWhatsApp").href = waLink();
+
+  // ربط زري الاتصال والواتساب برقم المحل من Supabase
+  $("#callShop").href = "tel:+" + SHOP.phone;
+  $("#contactWhatsApp").href = waLink();
 }
 
 // بيانات المحل
 $("#topWhatsApp").href = waLink();
 $("#heroWhatsApp").href = waLink();
+$("#callShop").href = "tel:+" + SHOP.phone;
+$("#contactWhatsApp").href = waLink();
 
 $("#shopAddress").textContent = SHOP.address;
 $("#shopHours").textContent = SHOP.hours;
@@ -260,7 +309,14 @@ async function loadProducts() {
 }
 
 // تحميل مناطق التوصيل من Supabase
+// تحميل مناطق التوصيل من Supabase
 async function loadDeliveryAreas() {
+  const container = $("#deliveryAreasList");
+
+  if (container) {
+    container.textContent = "جاري تحميل المناطق...";
+  }
+
   const { data, error } = await db
     .from("delivery_areas")
     .select("id, governorate, area, delivery_fee")
@@ -270,6 +326,11 @@ async function loadDeliveryAreas() {
 
   if (error) {
     console.error("Delivery areas error:", error);
+
+    if (container) {
+      container.textContent = "حصلت مشكلة في تحميل مناطق التوصيل.";
+    }
+
     return;
   }
 
@@ -284,6 +345,66 @@ async function loadDeliveryAreas() {
     governorates.map(name =>
       `<option value="${escapeHTML(name)}">${escapeHTML(name)}</option>`
     ).join("");
+
+  renderDeliveryAreasList();
+}
+
+// عرض مناطق التوصيل ورسومها في قسم التواصل
+function renderDeliveryAreasList() {
+  const container = $("#deliveryAreasList");
+
+  if (!container) return;
+
+  if (!DELIVERY_AREAS.length) {
+    container.innerHTML =
+      '<p style="color:#687b83">لا توجد مناطق توصيل متاحة حاليًا.</p>';
+    return;
+  }
+
+  const grouped = {};
+
+  DELIVERY_AREAS.forEach(item => {
+    if (!grouped[item.governorate]) {
+      grouped[item.governorate] = [];
+    }
+
+    grouped[item.governorate].push(item);
+  });
+
+  container.innerHTML = Object.entries(grouped).map(
+    ([governorate, areas]) => `
+      <div style="margin-bottom:14px">
+        <b style="color:#102d3d">
+          ${escapeHTML(governorate)}
+        </b>
+
+        <div style="display:grid;gap:7px;margin-top:7px">
+          ${areas.map(item => `
+            <div style="
+              display:flex;
+              justify-content:space-between;
+              align-items:center;
+              gap:10px;
+              padding:8px 11px;
+              background:#f6f8f8;
+              border:1px solid #e2e9eb;
+              border-radius:10px;
+            ">
+              <span>${escapeHTML(item.area)}</span>
+
+              <b style="
+                color:#18865b;
+                white-space:nowrap;
+                font-size:13px;
+              ">
+                ${money(item.delivery_fee)}
+              </b>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `
+  ).join("");
 }
 
 // حساب إجمالي المنتجات
@@ -475,7 +596,6 @@ $("#confirmOrder").addEventListener("click", async () => {
 
   const orderItems = ids.map(id => {
     const p = PRODUCTS.find(x => String(x.id) === id);
-
     if (!p) return null;
 
     return {
@@ -553,7 +673,6 @@ ${lines}
 
     $("#checkoutError").textContent =
       "حصلت مشكلة في حفظ الطلب. من فضلك حاول مرة تانية.";
-
   } finally {
     button.disabled = false;
     button.textContent = "تأكيد الطلب على واتساب";
