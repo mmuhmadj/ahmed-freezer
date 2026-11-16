@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
@@ -58,8 +59,11 @@
     .about-art{border-radius:23px;overflow:hidden;min-height:290px}.about-art img{width:100%;height:100%;object-fit:cover;display:block}
     .about h2{font-size:30px;color:var(--navy);margin:0 0 12px}.about p{color:var(--muted)}
     .contact-card{background:white;border:1px solid var(--line);border-radius:20px;padding:23px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .contact-item{display:flex;gap:12px;align-items:flex-start}.contact-item i{font-style:normal;width:40px;height:40px;border-radius:12px;background:var(--ice);display:grid;place-items:center}
+    .contact-item{display:flex;gap:12px;align-items:flex-start;min-width:0}
+    .contact-item i{font-style:normal;width:40px;height:40px;flex-shrink:0;border-radius:12px;background:var(--ice);display:grid;place-items:center}
     .contact-item b{display:block}.contact-item small{color:var(--muted)}
+    .map-link{display:none;margin-top:10px;background:var(--navy);padding:7px 13px;font-size:12px}
+    .map-link.visible{display:inline-flex}
     footer{background:#0b2230;color:#d5e4e9;padding:28px 0;text-align:center;font-size:13px}
     .cartbar{position:fixed;bottom:0;right:0;left:0;background:var(--navy);color:white;padding:12px 18px calc(12px + env(safe-area-inset-bottom));z-index:10;display:none;box-shadow:0 -8px 30px #0002}
     .cartbar.show{display:block}.cart-inner{width:min(1160px,100%);margin:auto;display:flex;align-items:center;justify-content:space-between;gap:15px}.cart-total small{display:block;color:#c5d8df;font-size:11px}.cart-total b{font-size:17px}
@@ -121,12 +125,24 @@
       <div><span class="eyebrow" style="background:#dcebf0;color:#173f52;border-color:#c8dce4">عن تلاجه ابوعلفه</span><h2>كل احتياجاتك المجمده في مكان واحد</h2><p>بنساعدك تختار من مجموعة منتجات اللحوم والدواجن والأسماك المجمدة. اطلب المنتجات اللي محتاجها، وفريقنا هيتواصل معاك لتأكيد الطلب والتوصيل.</p><a class="btn" href="#contact">بيانات التواصل</a></div>
     </div></section>
 
-    <section id="contact"><div class="container"><div class="section-head"><span>إحنا في خدمتك</span><h2>تواصل معانا</h2><p></p></div>
+    <section id="contact"><div class="container"><div class="section-head"><span>إحنا في خدمتك</span><h2>تواصل معانا</h2><p>كل طرق التواصل ومعلومات التوصيل في مكان واحد</p></div>
       <div class="contact-card">
-        <div class="contact-item"><i>📍</i><div><b>العنوان</b><small id="shopAddress"></small></div></div>
-        <div class="contact-item"><i>🕒</i><div><b>مواعيد العمل</b><small id="shopHours"></small></div></div>
+        <div class="contact-item">
+          <i>📍</i>
+          <div>
+            <b>العنوان</b>
+            <small id="shopAddress"></small>
+            <a id="mapLink" class="btn map-link" href="#" target="_blank" rel="noopener noreferrer">
+              📍 افتح الموقع على الخريطة
+            </a>
+          </div>
+        </div>
 
-        <!-- رقم الهاتف وأزرار الاتصال والواتساب -->
+        <div class="contact-item">
+          <i>🕒</i>
+          <div><b>مواعيد العمل</b><small id="shopHours"></small></div>
+        </div>
+
         <div class="contact-item">
           <i>📞</i>
           <div>
@@ -146,22 +162,22 @@
           </div>
         </div>
 
-      <div class="contact-item">
-  <i>🚚</i>
-  <div style="width:100%">
-    <b>التوصيل</b>
-    <small id="shopDelivery"></small>
+        <div class="contact-item">
+          <i>🚚</i>
+          <div style="width:100%">
+            <b>التوصيل</b>
+            <small id="shopDelivery"></small>
 
-    <details style="margin-top:10px">
-      <summary style="cursor:pointer;color:#18865b;font-weight:800">
-        📍 اعرف مناطق التوصيل والرسوم
-      </summary>
-      <div id="deliveryAreasList" style="margin-top:12px">
-        جاري تحميل المناطق...
-      </div>
-    </details>
-  </div>
-</div>
+            <details style="margin-top:10px">
+              <summary style="cursor:pointer;color:#18865b;font-weight:800">
+                📍 اعرف مناطق التوصيل والرسوم
+              </summary>
+              <div id="deliveryAreasList" style="margin-top:12px">
+                جاري تحميل المناطق...
+              </div>
+            </details>
+          </div>
+        </div>
       </div>
     </div></section>
   </main>
@@ -197,7 +213,8 @@ const SHOP = {
   phoneShow: "01096507121",
   address: "المنوفيه اشمون",
   hours: "يوميًا من 8 صباحًا إلى 12 مساءً",
-  delivery: "المنوفيه والشيخ زايد"
+  delivery: "المنوفيه والشيخ زايد",
+  mapUrl: ""
 };
 
 const SUPABASE_URL = "https://dpfqzhateshqbqpksirv.supabase.co";
@@ -253,6 +270,7 @@ async function loadShopSettings() {
   SHOP.address = data.address || SHOP.address;
   SHOP.hours = data.working_hours || SHOP.hours;
   SHOP.delivery = data.delivery_description || SHOP.delivery;
+  SHOP.mapUrl = data.map_url || "";
 
   document.title = SHOP.name + " | لحوم وأسماك ودواجن مجمدة";
   document.querySelector('meta[property="og:title"]').content = SHOP.name;
@@ -263,6 +281,22 @@ async function loadShopSettings() {
   $("#shopPhone").textContent = SHOP.phoneShow;
   $("#shopDelivery").textContent = SHOP.delivery;
 
+  // إظهار زر الخريطة فقط لو فيه رابط صحيح
+  const mapLink = $("#mapLink");
+
+  try {
+    const mapUrl = new URL(SHOP.mapUrl);
+
+    if (mapUrl.protocol === "https:" || mapUrl.protocol === "http:") {
+      mapLink.href = mapUrl.href;
+      mapLink.classList.add("visible");
+    } else {
+      mapLink.classList.remove("visible");
+    }
+  } catch {
+    mapLink.classList.remove("visible");
+  }
+
   $("#topWhatsApp").href = waLink();
   $("#heroWhatsApp").href = waLink();
 
@@ -271,7 +305,7 @@ async function loadShopSettings() {
   $("#contactWhatsApp").href = waLink();
 }
 
-// بيانات المحل
+// بيانات المحل الافتراضية
 $("#topWhatsApp").href = waLink();
 $("#heroWhatsApp").href = waLink();
 $("#callShop").href = "tel:+" + SHOP.phone;
@@ -308,7 +342,6 @@ async function loadProducts() {
   updateCart();
 }
 
-// تحميل مناطق التوصيل من Supabase
 // تحميل مناطق التوصيل من Supabase
 async function loadDeliveryAreas() {
   const container = $("#deliveryAreasList");
