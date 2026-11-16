@@ -116,77 +116,190 @@
   </main>
   <footer><div class="container">© <span id="year"></span> تلاجه ابوعلفه - جميع الحقوق محفوظة</div></footer>
   <div class="cartbar" id="cartBar"><div class="cart-inner"><div class="cart-total"><small id="cartCount">0 منتج</small><b id="cartTotal">0 ج.م</b></div><button class="checkout" id="checkout">إرسال الطلب على واتساب</button></div></div>
+<<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-/* عدّل بيانات المحل هنا قبل النشر */
+
 const SHOP = {
   name: "تلاجه ابوعلفه",
-  phone: "201096507121", // اكتب رقم واتساب بكود مصر 20 بدون + أو مسافات
+  phone: "201096507121",
   phoneShow: "01096507121",
   address: "المنوفيه اشمون",
   hours: "يوميًا من 8 صباحًا إلى 12 مساءً",
-  map: "https://maps.google.com/?q=تلاجة+احمد+ابو+علفه",
   delivery: "المنوفيه والشيخ زايد"
 };
-/* راجع الأسعار والكميات قبل النشر؛ الأسعار الحالية مبدئية من الملف الأصلي */
-const PRODUCTS = [
-  {c:"لحوم",n:"لحم بقري مفروم",u:"كجم",p:320,img:"https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=700&q=80"},
-  {c:"لحوم",n:"ستيك ريب آي",u:"كجم",p:520,img:"https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=700&q=80"},
-  {c:"لحوم",n:"كندوز مجمد",u:"كجم",p:380,img:"https://images.unsplash.com/photo-1603048297172-c92544798d5a?auto=format&fit=crop&w=700&q=80"},
-  {c:"لحوم",n:"كبدة بقري",u:"كجم",p:300,img:"https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=700&q=80"},
 
-  {c:"أسماك",n:"بلطي",u:"كجم",p:90,img:"https://images.unsplash.com/photo-1510130387422-82bed34b37e9?auto=format&fit=crop&w=700&q=80"},
-  {c:"أسماك",n:"فيليه سمك",u:"كجم",p:180,img:"https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=700&q=80"},
-  {c:"أسماك",n:"جمبري مقشر",u:"كجم",p:420,img:"https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&w=700&q=80"},
-  
-];
+const SUPABASE_URL = "https://dpfqzhateshqbqpksirv.supabase.co";
+const SUPABASE_KEY = "sb_publishable_IoXBVyRmLEEuXQKe0-x27A_rJtS2cxU";
+
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 const cart = {};
+let PRODUCTS = [];
+let active = "الكل";
+
 const $ = s => document.querySelector(s);
-const money = n => n.toLocaleString("en-US") + " ج.م";
-function waLink(message=""){return "https://wa.me/"+SHOP.phone+(message?"?text="+encodeURIComponent(message):"")}
-["#topWhatsApp","#heroWhatsApp"].forEach(s=>$(s).href=waLink());
-$("#shopAddress").textContent=SHOP.address;
-$("#shopHours").textContent=SHOP.hours;
-$("#shopPhone").textContent=SHOP.phoneShow;
-$("#shopDelivery").textContent=SHOP.delivery;
-$("#year").textContent=new Date().getFullYear();
-const cats=["الكل",...new Set(PRODUCTS.map(p=>p.c))];
-let active="الكل";
-function renderCategories(){
-  $("#categories").innerHTML=cats.map(c=>`<button class="cat-btn ${c===active?"active":""}" data-cat="${c}">${c}</button>`).join("");
+const money = n => Number(n).toLocaleString("en-US") + " ج.م";
+
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[ch]);
 }
-function renderProducts(){
-  const items=PRODUCTS.map((p,i)=>({p,i})).filter(x=>active==="الكل"||x.p.c===active);
-  $("#productGrid").innerHTML=items.map(({p,i})=>`<article class="product">
-    <div class="product-img"><img src="${p.img}" alt="${p.n}" loading="lazy" onerror="this.style.display='none'"></div>
-    <div class="product-body"><span class="product-cat">${p.c}</span><h3>${p.n}</h3>
-    <div class="price">${money(p.p)} <small>/ ${p.u}</small></div>
-    <div class="product-controls"><div class="qty"><button data-change="-0.5" data-i="${i}" aria-label="تقليل">−</button><span>${cart[i]||0}</span><button data-change="0.5" data-i="${i}" aria-label="زيادة">+</button></div><button class="add" data-add="${i}">أضف للسلة</button></div></div></article>`).join("") || '<div class="empty">لا توجد منتجات في هذا القسم</div>';
+
+
+function waLink(message = "") {
+  return "https://wa.me/" + SHOP.phone +
+    (message ? "?text=" + encodeURIComponent(message) : "");
 }
-function updateCart(){
-  const ids=Object.keys(cart).filter(k=>cart[k]>0);
-  const count=ids.reduce((s,k)=>s+cart[k],0);
-  const total=ids.reduce((s,k)=>s+cart[k]*PRODUCTS[k].p,0);
-  $("#cartBar").classList.toggle("show",ids.length>0);
-  $("#cartCount").textContent=count+" كجم / وحدة";
-  $("#cartTotal").textContent="الإجمالي التقريبي: "+money(total);
+
+$("#topWhatsApp").href = waLink();
+$("#heroWhatsApp").href = waLink();
+
+$("#shopAddress").textContent = SHOP.address;
+$("#shopHours").textContent = SHOP.hours;
+$("#shopPhone").textContent = SHOP.phoneShow;
+$("#shopDelivery").textContent = SHOP.delivery;
+$("#year").textContent = new Date().getFullYear();
+
+async function loadProducts() {
+  $("#productGrid").innerHTML =
+    '<div class="empty">جاري تحميل المنتجات...</div>';
+
+  const { data, error } = await db
+    .from("products")
+    .select("id,name,category,price,unit,image_url,is_active")
+    .eq("is_active", true)
+    .order("id");
+
+  if (error) {
+    console.error("Supabase error:", error);
+    $("#productGrid").innerHTML =
+      '<div class="empty">حصلت مشكلة في تحميل المنتجات. حاول مرة أخرى.</div>';
+    return;
+  }
+
+  PRODUCTS = data || [];
+
+  renderCategories();
+  renderProducts();
+  updateCart();
 }
-$("#categories").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(!b)return;active=b.dataset.cat;renderCategories();renderProducts()});
-$("#productGrid").addEventListener("click",e=>{
-  const add=e.target.closest("[data-add]"),change=e.target.closest("[data-change]");
-  if(add){const i=add.dataset.add;cart[i]=(cart[i]||0)+0.5}
-  if(change){const i=change.dataset.i;cart[i]=Math.max(0,(cart[i]||0)+Number(change.dataset.change))}
-  renderProducts();updateCart();
+
+function renderCategories() {
+  const cats = ["الكل", ...new Set(PRODUCTS.map(p => p.category).filter(Boolean))];
+
+  $("#categories").innerHTML = cats.map(c => `
+    <button class="cat-btn ${c === active ? "active" : ""}"
+      data-cat="${escapeHTML(c)}">${escapeHTML(c)}</button>
+  `).join("");
+}
+
+function renderProducts() {
+  const items = PRODUCTS.filter(p =>
+    active === "الكل" || p.category === active
+  );
+
+  $("#productGrid").innerHTML = items.map(p => `
+    <article class="product">
+      <div class="product-img">
+        ${p.image_url
+          ? `<img src="${escapeHTML(p.image_url)}"
+              alt="${escapeHTML(p.name)}" loading="lazy"
+              onerror="this.style.display='none'">`
+          : ""}
+      </div>
+      <div class="product-body">
+        <span class="product-cat">${escapeHTML(p.category)}</span>
+        <h3>${escapeHTML(p.name)}</h3>
+        <div class="price">
+          ${money(p.price)}
+          <small>/ ${escapeHTML(p.unit || "كجم")}</small>
+        </div>
+        <div class="product-controls">
+          <div class="qty">
+            <button data-change="-0.5" data-id="${p.id}">−</button>
+            <span>${cart[p.id] || 0}</span>
+            <button data-change="0.5" data-id="${p.id}">+</button>
+          </div>
+          <button class="add" data-add="${p.id}">أضف للسلة</button>
+        </div>
+      </div>
+    </article>
+  `).join("") || '<div class="empty">لا توجد منتجات في هذا القسم</div>';
+}
+
+function updateCart() {
+  const ids = Object.keys(cart).filter(id => cart[id] > 0);
+
+  const count = ids.reduce((s, id) => s + cart[id], 0);
+
+  const total = ids.reduce((s, id) => {
+    const product = PRODUCTS.find(p => String(p.id) === id);
+    return s + (product ? cart[id] * Number(product.price) : 0);
+  }, 0);
+
+  $("#cartBar").classList.toggle("show", ids.length > 0);
+  $("#cartCount").textContent = count + " كجم / وحدة";
+  $("#cartTotal").textContent = "الإجمالي التقريبي: " + money(total);
+}
+
+$("#categories").addEventListener("click", e => {
+  const b = e.target.closest("[data-cat]");
+  if (!b) return;
+
+  active = b.dataset.cat;
+  renderCategories();
+  renderProducts();
 });
-$("#checkout").addEventListener("click",()=>{
-  const ids=Object.keys(cart).filter(k=>cart[k]>0);if(!ids.length)return;
-  const lines=ids.map(k=>`• ${PRODUCTS[k].n}: ${cart[k]} ${PRODUCTS[k].u} = ${money(cart[k]*PRODUCTS[k].p)}`).join("\n");
-  const total=ids.reduce((s,k)=>s+cart[k]*PRODUCTS[k].p,0);
-  const msg=`أهلاً، عايز أطلب من تلاجه ابوعلفه
-:\n${lines}\nالإجمالي التقريبي: ${money(total)} (بدون التوصيل)\nالاسم:\nالعنوان:`;
- 
-  window.open(waLink(msg),"_blank","noopener");
+
+$("#productGrid").addEventListener("click", e => {
+  const add = e.target.closest("[data-add]");
+  const change = e.target.closest("[data-change]");
+
+  if (add) {
+    const id = add.dataset.add;
+    cart[id] = (cart[id] || 0) + 0.5;
+  }
+
+  if (change) {
+    const id = change.dataset.id;
+    cart[id] = Math.max(0, (cart[id] || 0) + Number(change.dataset.change));
+  }
+
+  renderProducts();
+  updateCart();
 });
-renderCategories();renderProducts();updateCart();
+
+$("#checkout").addEventListener("click", () => {
+  const ids = Object.keys(cart).filter(id => cart[id] > 0);
+  if (!ids.length) return;
+
+  const lines = ids.map(id => {
+    const p = PRODUCTS.find(x => String(x.id) === id);
+    if (!p) return "";
+
+    return `• ${p.name}: ${cart[id]} ${p.unit || "كجم"} = ${
+      money(cart[id] * Number(p.price))
+    }`;
+  }).filter(Boolean).join("\n");
+
+  const total = ids.reduce((s, id) => {
+    const p = PRODUCTS.find(x => String(x.id) === id);
+    return s + (p ? cart[id] * Number(p.price) : 0);
+  }, 0);
+
+  const msg = `أهلاً، عايز أطلب من ${SHOP.name}:\n${lines}\nالإجمالي التقريبي: ${money(total)} (بدون التوصيل)\nالاسم:\nالعنوان:`;
+
+  window.open(waLink(msg), "_blank", "noopener");
+});
+
+loadProducts();
+
 </script>
 </body>
 </html>
