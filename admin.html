@@ -6,351 +6,1267 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>لوحة إدارة تلاجة أبو علفة</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#f3f6f7;color:#183342;font-family:Tahoma,Arial,sans-serif}
-.container{max-width:1000px;margin:30px auto;padding:16px}
-header{background:#102d3d;color:white;padding:22px;border-radius:15px;margin-bottom:20px}
-h1{margin:0;font-size:23px}
-.card{background:white;padding:20px;border-radius:14px;margin-bottom:18px;box-shadow:0 3px 15px #0000000a}
-h2{font-size:19px;margin-top:0}
-input,button{font:inherit}
-input[type="text"],input[type="email"],input[type="password"],input[type="number"],input[type="file"],textarea{
-width:100%;padding:12px;border:1px solid #dce4e8;border-radius:9px;margin:7px 0 13px;background:white
+:root{
+  --green:#166534;
+  --green-dark:#14532d;
+  --green-light:#dcfce7;
+  --bg:#f1f5f9;
+  --white:#fff;
+  --text:#1e293b;
+  --muted:#64748b;
+  --border:#e2e8f0;
+  --red:#dc2626;
+  --shadow:0 5px 20px rgba(15,23,42,.06);
 }
-textarea{min-height:75px}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Tahoma,Arial,sans-serif;font-size:15px;line-height:1.7;
+}
+button,input,select,textarea{font:inherit}
+button{
+  border:0;border-radius:9px;padding:10px 16px;
+  background:var(--green);color:white;cursor:pointer;
+  font-weight:bold;transition:.2s;
+}
+button:hover{filter:brightness(.94)}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.secondary{background:#64748b}
+button.danger{background:var(--red)}
+button.light{background:#e2e8f0;color:#334155}
+button.small{padding:7px 11px;font-size:13px}
+input,select,textarea{
+  width:100%;padding:12px;border:1px solid var(--border);
+  border-radius:9px;background:#fff;outline:none;
+  margin:6px 0 14px;color:var(--text);
+}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--green);
+  box-shadow:0 0 0 3px rgba(22,101,52,.09);
+}
+input[type=checkbox]{width:auto;margin:0 0 0 7px}
 label{font-weight:bold;font-size:14px}
-button{border:0;border-radius:9px;padding:11px 17px;background:#102d3d;color:white;cursor:pointer;font-weight:bold}
-button:hover{opacity:.9}
-.green{background:#18865b}
-.red{background:#c83f36}
-.gray{background:#647780}
+.container{max-width:1250px;margin:25px auto;padding:0 16px}
+header{
+  background:linear-gradient(135deg,#14532d,#15803d);
+  color:#fff;border-radius:18px;padding:25px;margin-bottom:20px;
+  box-shadow:var(--shadow);
+}
+header h1{margin:0;font-size:27px}
+header p{margin:5px 0 0;color:#dcfce7}
+.card{
+  background:var(--white);padding:22px;border-radius:15px;
+  margin-bottom:18px;box-shadow:var(--shadow);
+  border:1px solid #edf0f3;
+}
+h2{margin:0 0 18px;color:var(--green-dark);font-size:21px}
+h3{font-size:17px;color:var(--text)}
 .hidden{display:none!important}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.actions{display:flex;gap:8px;flex-wrap:wrap}
-table{width:100%;border-collapse:collapse}
-th,td{padding:11px;border-bottom:1px solid #e7edef;text-align:right;font-size:14px}
-td img{width:55px;height:48px;object-fit:cover;border-radius:7px}
-.status{color:#18865b;font-weight:bold}
-.muted{color:#687b83;font-size:13px}
-#message{margin:12px 0;font-weight:bold}
-@media(max-width:600px){.grid{grid-template-columns:1fr}.container{margin:10px auto;padding:10px}.card{padding:14px}table{font-size:12px}th,td{padding:7px}}
+.grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
+}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.main-nav{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px}
+.main-nav button{padding:11px 18px}
+.message{
+  padding:11px 14px;border-radius:9px;margin:12px 0;
+  background:#ecfdf5;color:#166534;font-size:14px;
+}
+.message.error{background:#fef2f2;color:#b91c1c}
+.muted{color:var(--muted);font-size:13px}
+hr{border:0;border-top:1px solid var(--border);margin:22px 0}
+.order-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}
+.order-tabs button{
+  background:#e2e8f0;color:#334155;padding:9px 14px;font-size:13px;
+}
+.order-tabs button.active{background:var(--green);color:#fff}
+.order-tools{
+  display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;
+}
+.order-tools input{margin:5px 0 13px}
+.order-card{
+  border:1px solid var(--border);border-radius:13px;
+  padding:17px;margin:13px 0;background:#fff;
+}
+.order-head{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:15px;
+}
+.order-head p{margin:4px 0}
+.order-number{font-size:17px;color:var(--green-dark)}
+.order-total{font-size:18px;font-weight:bold;color:var(--green-dark)}
+.status-badge{
+  display:inline-block;padding:3px 10px;border-radius:20px;
+  background:#f1f5f9;font-size:12px;font-weight:bold;
+}
+.order-details{background:#f8fafc;padding:15px;border-radius:10px;margin-top:15px}
+.order-details p{margin:7px 0}
+.order-items-wrap{overflow-x:auto}
+.order-items{width:100%;border-collapse:collapse;margin:12px 0;min-width:420px}
+.order-items th,.order-items td{
+  padding:10px;text-align:right;border-bottom:1px solid var(--border);
+}
+.order-items th{background:#edf2f7}
+.status-row{
+  display:flex;align-items:center;flex-wrap:wrap;gap:10px;
+  border-top:1px solid var(--border);margin-top:15px;padding-top:13px;
+}
+.status-row select{width:auto;min-width:165px;margin:0}
+.pagination{
+  display:flex;justify-content:center;align-items:center;
+  gap:13px;margin:20px 0 5px;
+}
+.empty-state{
+  text-align:center;padding:35px 10px;color:var(--muted);
+  background:#f8fafc;border-radius:12px;
+}
+.product-img{
+  width:72px;height:72px;object-fit:cover;
+  border-radius:10px;border:1px solid var(--border);
+}
+.product-row,.delivery-row{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:15px;padding:13px 0;border-bottom:1px solid var(--border);
+}
+.product-info{display:flex;align-items:center;gap:13px;min-width:0}
+.product-info p{margin:3px 0}
+.check-row{display:flex;align-items:center;margin:8px 0 15px}
+.delivery-row-info{min-width:0}
+.delivery-row-info p{margin:3px 0}
+.delivery-fee{font-weight:bold;color:var(--green-dark)}
+.delivery-inactive{color:var(--red)}
+#login{max-width:480px;margin:50px auto}
+#login h2{text-align:center}
+#login button{width:100%}
+.loading{text-align:center;padding:25px;color:var(--muted)}
+@media(max-width:650px){
+  .container{padding:0 9px;margin:12px auto}
+  header{padding:19px;border-radius:13px}
+  header h1{font-size:21px}
+  .card{padding:14px;border-radius:12px}
+  h2{font-size:19px}
+  .main-nav button{flex:1 1 42%;font-size:13px;padding:10px 7px}
+  .order-tools{grid-template-columns:1fr}
+  .order-head{display:block}
+  .order-head .actions{margin-top:12px}
+  .status-row{align-items:stretch}
+  .status-row label{width:100%}
+  .status-row select{width:100%}
+  .status-row button{width:100%}
+  .product-row,.delivery-row{align-items:flex-start}
+  .product-row .actions,.delivery-row .actions{flex-direction:column}
+  .product-img{width:58px;height:58px}
+  .pagination{gap:8px}
+}
 </style>
 </head>
+
 <body>
 <div class="container">
+
 <header>
-<h1>❄️ لوحة إدارة تلاجة أبو علفة</h1>
-<p>إدارة المنتجات والأسعار والصور</p>
+  <h1>لوحة إدارة تلاجة أبو علفة</h1>
+  <p>إدارة الطلبات والمنتجات والمحافظات وإعدادات المحل</p>
 </header>
 
-<div id="login" class="card">
-<h2>تسجيل دخول الأدمن</h2>
-<label>البريد الإلكتروني</label>
-<input id="email" type="email" placeholder="اكتب إيميل الأدمن">
-<label>كلمة المرور</label>
-<input id="password" type="password" placeholder="كلمة المرور">
-<button id="loginBtn" class="green">دخول</button>
-<div id="loginMessage"></div>
-</div>
+<section id="login" class="card">
+  <h2>تسجيل دخول الأدمن</h2>
+  <label>البريد الإلكتروني</label>
+  <input id="email" type="email" placeholder="البريد الإلكتروني" autocomplete="username">
+  <label>كلمة المرور</label>
+  <input id="password" type="password" placeholder="كلمة المرور" autocomplete="current-password">
+  <button id="loginBtn">تسجيل الدخول</button>
+  <div id="loginMessage"></div>
+</section>
 
-<div id="dashboard" class="hidden">
-<div class="card">
-<div class="actions">
-<h2 style="flex:1">مرحبًا بك في لوحة التحكم</h2>
-<button id="logoutBtn" class="red">تسجيل الخروج</button>
-</div>
-</div>
+<main id="dashboard" class="hidden">
 
-<div class="card">
-<h2 id="formTitle">إضافة منتج جديد</h2>
-<form id="productForm">
-<input type="hidden" id="productId">
+  <nav class="main-nav">
+    <button onclick="showSection('ordersSection')">📦 إدارة الطلبات</button>
+    <button onclick="showSection('productsSection')">🛒 إدارة المنتجات</button>
+    <button onclick="showSection('deliverySection')">🚚 المحافظات والتوصيل</button>
+    <button onclick="showSection('settingsSection')">⚙️ إعدادات المحل</button>
+    <button class="secondary" id="logoutBtn">تسجيل الخروج</button>
+  </nav>
 
-<label>اسم المنتج</label>
-<input id="name" type="text" required placeholder="مثال: سمكة بوري">
+  <!-- الطلبات -->
+  <section id="ordersSection" class="card">
+    <h2>📦 إدارة الطلبات</h2>
+    <p class="muted">أحدث الطلبات تظهر أولًا — 20 طلبًا في كل صفحة.</p>
 
-<div class="grid">
-<div>
-<label>القسم</label>
-<input id="category" type="text" required placeholder="لحوم أو أسماك أو دواجن">
-</div>
-<div>
-<label>السعر</label>
-<input id="price" type="number" min="0" step="0.01" required placeholder="السعر">
-</div>
-</div>
+    <div class="order-tabs">
+      <button class="active" data-tab="new">الطلبات الجديدة</button>
+      <button data-tab="confirmed">المؤكدة</button>
+      <button data-tab="preparing">جاري التجهيز</button>
+      <button data-tab="delivered">تم التوصيل</button>
+      <button data-tab="cancelled">الملغية</button>
+      <button data-tab="all">كل الطلبات</button>
+    </div>
 
-<div class="grid">
-<div>
-<label>الوحدة</label>
-<input id="unit" type="text" value="كجم" placeholder="كجم أو قطعة">
-</div>
-<div>
-<label>صورة المنتج</label>
-<input id="image" type="file" accept="image/*">
-</div>
-</div>
+    <div class="order-tools">
+      <input id="orderSearch" placeholder="🔍 ابحث باسم العميل أو رقم الهاتف">
+      <button id="refreshOrders" class="secondary">🔄 تحديث الطلبات</button>
+    </div>
 
-<label>وصف المنتج (اختياري)</label>
-<textarea id="description" placeholder="وصف مختصر للمنتج"></textarea>
+    <div id="ordersMessage"></div>
+    <div id="ordersCount" class="muted"></div>
+    <div id="ordersList" class="loading">جاري تحميل الطلبات...</div>
 
-<label>
-<input id="active" type="checkbox" checked style="width:auto">
- المنتج نشط ويظهر للعملاء
-</label>
+    <div class="pagination">
+      <button id="prevOrders" class="secondary">السابق</button>
+      <span id="ordersPageInfo" class="muted"></span>
+      <button id="nextOrders" class="secondary">التالي</button>
+    </div>
+  </section>
 
-<div class="actions" style="margin-top:16px">
-<button type="submit" class="green" id="saveBtn">حفظ المنتج</button>
-<button type="button" class="gray hidden" id="cancelBtn">إلغاء التعديل</button>
-</div>
-</form>
-<div id="message"></div>
-</div>
+  <!-- المنتجات -->
+  <section id="productsSection" class="card hidden">
+    <h2>🛒 إدارة المنتجات</h2>
 
-<div class="card">
-<h2>المنتجات الموجودة</h2>
-<p class="muted">تقدر تعدل أو تحذف أي منتج من هنا.</p>
-<div style="overflow-x:auto">
-<table>
-<thead>
-<tr>
-<th>الصورة</th>
-<th>المنتج</th>
-<th>السعر</th>
-<th>الحالة</th>
-<th>الإجراءات</th>
-</tr>
-</thead>
-<tbody id="productsList">
-<tr><td colspan="5">جاري التحميل...</td></tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
+    <form id="productForm">
+      <input type="hidden" id="productId">
+
+      <div class="grid">
+        <div>
+          <label>اسم المنتج</label>
+          <input id="name" required placeholder="اسم المنتج">
+        </div>
+        <div>
+          <label>القسم</label>
+          <input id="category" required placeholder="لحوم / أسماك / دواجن">
+        </div>
+        <div>
+          <label>السعر</label>
+          <input id="price" type="number" min="0" step="0.01" required>
+        </div>
+        <div>
+          <label>الوحدة</label>
+          <input id="unit" placeholder="كيلو / قطعة / كيس">
+        </div>
+      </div>
+
+      <label>صورة المنتج</label>
+      <input id="image" type="file" accept="image/*">
+
+      <label>الوصف</label>
+      <textarea id="description" rows="3" placeholder="وصف المنتج"></textarea>
+
+      <label class="check-row">
+        <input id="active" type="checkbox" checked>
+        المنتج نشط ويظهر في المتجر
+      </label>
+
+      <div class="actions">
+        <button id="saveBtn" type="submit">حفظ المنتج</button>
+        <button id="cancelBtn" type="button" class="secondary">إلغاء التعديل</button>
+      </div>
+      <div id="productMessage"></div>
+    </form>
+
+    <hr>
+    <h3>المنتجات الحالية</h3>
+    <div id="productsList" class="loading">جاري تحميل المنتجات...</div>
+  </section>
+
+  <!-- المحافظات والتوصيل -->
+  <section id="deliverySection" class="card hidden">
+    <h2>🚚 إدارة المحافظات ومناطق التوصيل</h2>
+    <p class="muted">
+      أضف المحافظة والمنطقة وحدد رسوم التوصيل. يمكنك إضافة أكثر من منطقة لنفس المحافظة.
+    </p>
+
+    <form id="deliveryForm">
+      <input type="hidden" id="deliveryId">
+
+      <div class="grid">
+        <div>
+          <label>اسم المحافظة</label>
+          <input id="deliveryGovernorate" required placeholder="مثال: الجيزة">
+        </div>
+        <div>
+          <label>اسم المنطقة أو المركز</label>
+          <input id="deliveryArea" required placeholder="مثال: 6 أكتوبر">
+        </div>
+        <div>
+          <label>رسوم التوصيل بالجنيه</label>
+          <input id="deliveryFee" type="number" min="0" step="0.01" required placeholder="مثال: 50">
+        </div>
+      </div>
+
+      <label class="check-row">
+        <input id="deliveryActive" type="checkbox" checked>
+        المنطقة متاحة للطلب في المتجر
+      </label>
+
+      <div class="actions">
+        <button id="saveDeliveryBtn" type="submit">إضافة منطقة التوصيل</button>
+        <button id="cancelDeliveryBtn" type="button" class="secondary">إلغاء</button>
+      </div>
+
+      <div id="deliveryMessage"></div>
+    </form>
+
+    <hr>
+
+    <div class="order-tools">
+      <input id="deliverySearch" placeholder="🔍 ابحث باسم المحافظة أو المنطقة">
+      <button id="refreshDelivery" class="secondary" type="button">🔄 تحديث المناطق</button>
+    </div>
+
+    <div id="deliveryCount" class="muted"></div>
+    <div id="deliveryList" class="loading">جاري تحميل مناطق التوصيل...</div>
+  </section>
+
+  <!-- الإعدادات -->
+  <section id="settingsSection" class="card hidden">
+    <h2>⚙️ إعدادات المحل</h2>
+
+    <label>اسم المحل</label>
+    <input id="storeName">
+
+    <label>رقم واتساب المحل</label>
+    <input id="whatsappPhone">
+
+    <label>عنوان المحل</label>
+    <input id="shopAddress">
+
+    <label>مواعيد العمل</label>
+    <input id="workingHours">
+
+    <label>وصف التوصيل</label>
+    <textarea id="deliveryDescription" rows="3"></textarea>
+
+    <button id="saveSettingsBtn">حفظ الإعدادات</button>
+    <div id="settingsMessage"></div>
+  </section>
+
+</main>
 </div>
 
 <script>
 const SUPABASE_URL = "https://dpfqzhateshqbqpksirv.supabase.co";
 const SUPABASE_KEY = "sb_publishable_IoXBVyRmLEEuXQKe0-x27A_rJtS2cxU";
 
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
-const $ = id => document.getElementById(id);
+let currentTab = "new";
+let currentOrdersPage = 1;
+const ordersPerPage = 20;
+let expandedOrders = new Set();
+let searchTimer = null;
+let ordersRequestNumber = 0;
+let deliverySearchTimer = null;
 
-function message(text, error=false) {
-  $("message").textContent = text;
-  $("message").style.color = error ? "#c83f36" : "#18865b";
+function $(id){
+  return document.getElementById(id);
 }
 
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, ch => ({
-    "&":"&amp;", "<":"&lt;", ">":"&gt;",
-    '"':"&quot;", "'":"&#39;"
-  })[ch]);
+function escapeHTML(value){
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  })[c]);
 }
 
-async function checkAdmin() {
-  const {data:{session}} = await db.auth.getSession();
-
-  if (!session) {
-    $("login").classList.remove("hidden");
-    $("dashboard").classList.add("hidden");
-    return;
-  }
-
-  const {data, error} = await db.rpc("is_admin");
-
-  if (error || data !== true) {
-    await db.auth.signOut();
-    $("loginMessage").textContent = "هذا الحساب غير مصرح له بالدخول كأدمن.";
-    $("login").classList.remove("hidden");
-    $("dashboard").classList.add("hidden");
-    return;
-  }
-
-  $("login").classList.add("hidden");
-  $("dashboard").classList.remove("hidden");
-  await loadProducts();
+function showMessage(id,message,error=false){
+  const el = $(id);
+  el.textContent = message;
+  el.className = error ? "message error" : "message";
 }
 
-$("loginBtn").addEventListener("click", async () => {
+function clearMessage(id){
+  $(id).textContent = "";
+  $(id).className = "";
+}
+
+function showSection(id){
+  [
+    "ordersSection",
+    "productsSection",
+    "deliverySection",
+    "settingsSection"
+  ].forEach(section=>{
+    $(section).classList.toggle("hidden",section !== id);
+  });
+
+  if(id === "ordersSection") loadOrders();
+  if(id === "productsSection") loadProducts();
+  if(id === "deliverySection") loadDeliveryAreas();
+  if(id === "settingsSection") loadShopSettings();
+}
+
+/* تسجيل الدخول */
+
+$("loginBtn").addEventListener("click", login);
+
+async function login(){
   const email = $("email").value.trim();
   const password = $("password").value;
 
-  $("loginMessage").textContent = "جاري تسجيل الدخول...";
-
-  const {error} = await db.auth.signInWithPassword({email,password});
-
-  if (error) {
-    $("loginMessage").textContent = "تعذر تسجيل الدخول: " + error.message;
+  if(!email || !password){
+    showMessage("loginMessage","اكتب البريد الإلكتروني وكلمة المرور.",true);
     return;
   }
 
-  await checkAdmin();
-});
+  $("loginBtn").disabled = true;
+  $("loginBtn").textContent = "جاري تسجيل الدخول...";
 
-$("logoutBtn").addEventListener("click", async () => {
-  await db.auth.signOut();
+  try{
+    const {error} = await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if(error) throw error;
+
+    await checkAdmin();
+  }catch(error){
+    showMessage("loginMessage","فشل تسجيل الدخول: " + error.message,true);
+  }finally{
+    $("loginBtn").disabled = false;
+    $("loginBtn").textContent = "تسجيل الدخول";
+  }
+}
+
+async function checkAdmin(){
+  try{
+    const {data:{user},error:userError} =
+      await supabaseClient.auth.getUser();
+
+    if(userError) throw userError;
+
+    if(!user){
+      $("login").classList.remove("hidden");
+      $("dashboard").classList.add("hidden");
+      return;
+    }
+
+    const {data,error} = await supabaseClient.rpc("is_admin");
+
+    if(error){
+      showMessage(
+        "loginMessage",
+        "خطأ في التحقق من صلاحية الأدمن: " + error.message,
+        true
+      );
+      return;
+    }
+
+    if(data !== true){
+      showMessage("loginMessage","الحساب ليس لديه صلاحية الأدمن.",true);
+      await supabaseClient.auth.signOut();
+      return;
+    }
+
+    $("login").classList.add("hidden");
+    $("dashboard").classList.remove("hidden");
+
+    loadOrders();
+    loadProducts();
+    loadShopSettings();
+
+  }catch(error){
+    showMessage("loginMessage","حدث خطأ: " + error.message,true);
+  }
+}
+
+$("logoutBtn").addEventListener("click",async()=>{
+  await supabaseClient.auth.signOut();
   location.reload();
 });
 
-async function uploadImage(file) {
-  if (!file) return null;
+/* إعدادات المحل */
 
-  if (!file.type.startsWith("image/")) {
-    throw new Error("اختار ملف صورة صحيح.");
+async function loadShopSettings(){
+  const {data,error} = await supabaseClient
+    .from("shop_settings")
+    .select("*")
+    .eq("id",1)
+    .maybeSingle();
+
+  if(error){
+    showMessage("settingsMessage",error.message,true);
+    return;
   }
 
-  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-  const path = Date.now() + "-" + safeName;
+  if(!data) return;
 
-  const {error} = await db.storage
+  $("storeName").value = data.store_name || "";
+  $("whatsappPhone").value = data.whatsapp_phone || "";
+  $("shopAddress").value = data.address || "";
+  $("workingHours").value = data.working_hours || "";
+  $("deliveryDescription").value = data.delivery_description || "";
+}
+
+$("saveSettingsBtn").addEventListener("click",saveSettings);
+
+async function saveSettings(){
+  const settings = {
+    id:1,
+    store_name:$("storeName").value.trim(),
+    whatsapp_phone:$("whatsappPhone").value.trim(),
+    address:$("shopAddress").value.trim(),
+    working_hours:$("workingHours").value.trim(),
+    delivery_description:$("deliveryDescription").value.trim(),
+    updated_at:new Date().toISOString()
+  };
+
+  $("saveSettingsBtn").disabled = true;
+
+  try{
+    const {error} = await supabaseClient
+      .from("shop_settings")
+      .upsert(settings);
+
+    if(error) throw error;
+
+    showMessage("settingsMessage","تم حفظ الإعدادات بنجاح ✅");
+  }catch(error){
+    showMessage("settingsMessage",error.message,true);
+  }finally{
+    $("saveSettingsBtn").disabled = false;
+  }
+}
+
+/* إدارة المحافظات ومناطق التوصيل */
+
+async function loadDeliveryAreas(){
+  $("deliveryList").textContent = "جاري تحميل مناطق التوصيل...";
+  clearMessage("deliveryMessage");
+
+  try{
+    const {data,error} = await supabaseClient
+      .from("delivery_areas")
+      .select("*")
+      .order("governorate",{ascending:true})
+      .order("area",{ascending:true});
+
+    if(error) throw error;
+
+    const search = $("deliverySearch").value.trim().toLowerCase();
+
+    const filtered = (data || []).filter(item=>{
+      const text = (item.governorate + " " + item.area).toLowerCase();
+      return text.includes(search);
+    });
+
+    $("deliveryCount").textContent =
+      "عدد المناطق: " + filtered.length +
+      " — إجمالي السجلات: " + (data || []).length;
+
+    if(!filtered.length){
+      $("deliveryList").innerHTML =
+        '<div class="empty-state">لا توجد مناطق توصيل مطابقة للبحث</div>';
+      return;
+    }
+
+    $("deliveryList").innerHTML = filtered.map(item=>`
+      <div class="delivery-row">
+        <div class="delivery-row-info">
+          <strong>${escapeHTML(item.governorate)}</strong>
+          <p>${escapeHTML(item.area)}</p>
+          <p class="delivery-fee">${escapeHTML(item.delivery_fee)} جنيه رسوم توصيل</p>
+          <span class="status-badge ${item.is_active ? "" : "delivery-inactive"}">
+            ${item.is_active ? "متاحة للطلب" : "متوقفة"}
+          </span>
+        </div>
+
+        <div class="actions">
+          <button class="small"
+            onclick="editDeliveryArea(${Number(item.id)})">
+            تعديل
+          </button>
+
+          <button class="small secondary"
+            onclick="toggleDeliveryArea(${Number(item.id)},${!item.is_active})">
+            ${item.is_active ? "إيقاف" : "تفعيل"}
+          </button>
+
+          <button class="small danger"
+            onclick="deleteDeliveryArea(${Number(item.id)})">
+            حذف
+          </button>
+        </div>
+      </div>
+    `).join("");
+
+  }catch(error){
+    $("deliveryList").textContent =
+      "فشل تحميل مناطق التوصيل: " + error.message;
+  }
+}
+
+$("deliveryForm").addEventListener("submit",saveDeliveryArea);
+
+async function saveDeliveryArea(e){
+  e.preventDefault();
+
+  const id = $("deliveryId").value;
+
+  const governorate = $("deliveryGovernorate").value.trim();
+  const area = $("deliveryArea").value.trim();
+  const deliveryFee = Number($("deliveryFee").value);
+
+  if(!governorate || !area){
+    showMessage("deliveryMessage","اكتب اسم المحافظة والمنطقة.",true);
+    return;
+  }
+
+  if(!Number.isFinite(deliveryFee) || deliveryFee < 0){
+    showMessage("deliveryMessage","اكتب رسوم توصيل صحيحة.",true);
+    return;
+  }
+
+  const record = {
+    governorate,
+    area,
+    delivery_fee:deliveryFee,
+    is_active:$("deliveryActive").checked
+  };
+
+  $("saveDeliveryBtn").disabled = true;
+  $("saveDeliveryBtn").textContent = "جاري الحفظ...";
+
+  try{
+    let result;
+
+    if(id){
+      result = await supabaseClient
+        .from("delivery_areas")
+        .update(record)
+        .eq("id",id)
+        .select("id");
+    }else{
+      result = await supabaseClient
+        .from("delivery_areas")
+        .insert(record)
+        .select("id");
+    }
+
+    if(result.error) throw result.error;
+
+    if(!result.data || !result.data.length){
+      throw new Error("لم يتم حفظ المنطقة. راجع صلاحيات الأدمن.");
+    }
+
+    showMessage(
+      "deliveryMessage",
+      id ? "تم تعديل منطقة التوصيل بنجاح ✅" : "تمت إضافة منطقة التوصيل بنجاح ✅"
+    );
+
+    resetDeliveryForm();
+    await loadDeliveryAreas();
+
+  }catch(error){
+    showMessage(
+      "deliveryMessage",
+      "فشل حفظ منطقة التوصيل: " + error.message,
+      true
+    );
+  }finally{
+    $("saveDeliveryBtn").disabled = false;
+    $("saveDeliveryBtn").textContent = "إضافة منطقة التوصيل";
+  }
+}
+
+async function editDeliveryArea(id){
+  try{
+    const {data,error} = await supabaseClient
+      .from("delivery_areas")
+      .select("*")
+      .eq("id",id)
+      .single();
+
+    if(error) throw error;
+
+    $("deliveryId").value = data.id;
+    $("deliveryGovernorate").value = data.governorate || "";
+    $("deliveryArea").value = data.area || "";
+    $("deliveryFee").value = data.delivery_fee ?? 0;
+    $("deliveryActive").checked = data.is_active !== false;
+
+    $("saveDeliveryBtn").textContent = "حفظ التعديلات";
+    $("deliveryForm").scrollIntoView({behavior:"smooth"});
+
+    showMessage(
+      "deliveryMessage",
+      "أنت تعدّل منطقة: " + data.area
+    );
+
+  }catch(error){
+    showMessage("deliveryMessage","فشل تحميل المنطقة: " + error.message,true);
+  }
+}
+
+async function toggleDeliveryArea(id,newActive){
+  const action = newActive ? "تفعيل" : "إيقاف";
+
+  if(!confirm("هل تريد " + action + " منطقة التوصيل؟")) return;
+
+  try{
+    const {data,error} = await supabaseClient
+      .from("delivery_areas")
+      .update({is_active:newActive})
+      .eq("id",id)
+      .select("id");
+
+    if(error) throw error;
+
+    if(!data || !data.length){
+      throw new Error("لم يتم تحديث المنطقة. راجع صلاحيات الأدمن.");
+    }
+
+    showMessage(
+      "deliveryMessage",
+      newActive ? "تم تفعيل المنطقة بنجاح." : "تم إيقاف المنطقة بنجاح."
+    );
+
+    await loadDeliveryAreas();
+
+  }catch(error){
+    showMessage("deliveryMessage","فشل تغيير حالة المنطقة: " + error.message,true);
+  }
+}
+
+async function deleteDeliveryArea(id){
+  if(!confirm("هل أنت متأكد من حذف منطقة التوصيل نهائيًا؟")) return;
+
+  try{
+    const {data,error} = await supabaseClient
+      .from("delivery_areas")
+      .delete()
+      .eq("id",id)
+      .select("id");
+
+    if(error) throw error;
+
+    if(!data || !data.length){
+      throw new Error("لم يتم حذف المنطقة. راجع صلاحيات الأدمن.");
+    }
+
+    showMessage("deliveryMessage","تم حذف منطقة التوصيل بنجاح.");
+    await loadDeliveryAreas();
+
+  }catch(error){
+    showMessage("deliveryMessage","فشل حذف المنطقة: " + error.message,true);
+  }
+}
+
+function resetDeliveryForm(){
+  $("deliveryForm").reset();
+  $("deliveryId").value = "";
+  $("deliveryActive").checked = true;
+  $("saveDeliveryBtn").textContent = "إضافة منطقة التوصيل";
+}
+
+$("cancelDeliveryBtn").addEventListener("click",()=>{
+  resetDeliveryForm();
+  clearMessage("deliveryMessage");
+});
+
+$("refreshDelivery").addEventListener("click",loadDeliveryAreas);
+
+$("deliverySearch").addEventListener("input",()=>{
+  clearTimeout(deliverySearchTimer);
+  deliverySearchTimer = setTimeout(loadDeliveryAreas,300);
+});
+
+/* الصور والمنتجات */
+
+async function uploadImage(file){
+  if(!file) return null;
+
+  const ext = file.name.split(".").pop();
+  const path = Date.now() + "-" +
+    Math.random().toString(36).slice(2) + "." + ext;
+
+  const {error} = await supabaseClient
+    .storage
     .from("product-images")
-    .upload(path, file);
+    .upload(path,file);
 
-  if (error) throw error;
+  if(error) throw error;
 
-  const {data} = db.storage
+  const {data} = supabaseClient
+    .storage
     .from("product-images")
     .getPublicUrl(path);
 
   return data.publicUrl;
 }
 
-async function loadProducts() {
-  $("productsList").innerHTML = "<tr><td colspan='5'>جاري التحميل...</td></tr>";
+async function loadProducts(){
+  $("productsList").textContent = "جاري تحميل المنتجات...";
 
-  const {data,error} = await db
+  const {data,error} = await supabaseClient
     .from("products")
-    .select("id,name,category,price,unit,image_url,is_active,description")
-    .order("id");
+    .select("*")
+    .order("created_at",{ascending:false});
 
-  if (error) {
-    $("productsList").innerHTML = "<tr><td colspan='5'>خطأ في تحميل المنتجات: " + escapeHTML(error.message) + "</td></tr>";
+  if(error){
+    $("productsList").textContent = "خطأ في تحميل المنتجات: " + error.message;
     return;
   }
 
-  $("productsList").innerHTML = (data || []).map(p => `
-    <tr>
-      <td>${p.image_url ? `<img src="${escapeHTML(p.image_url)}" alt="">` : "بدون صورة"}</td>
-      <td>${escapeHTML(p.name)}</td>
-      <td>${escapeHTML(p.price)} ج.م</td>
-      <td>${p.is_active ? "نشط" : "مخفي"}</td>
-      <td>
-        <div class="actions">
-          <button data-edit="${p.id}">تعديل</button>
-          <button class="red" data-delete="${p.id}">حذف</button>
+  if(!data || !data.length){
+    $("productsList").innerHTML =
+      '<div class="empty-state">لا توجد منتجات حاليًا</div>';
+    return;
+  }
+
+  $("productsList").innerHTML = data.map(p=>`
+    <div class="product-row">
+      <div class="product-info">
+        ${p.image_url
+          ? `<img class="product-img" src="${escapeHTML(p.image_url)}" alt="">`
+          : ""}
+        <div>
+          <strong>${escapeHTML(p.name)}</strong>
+          <p class="muted">${escapeHTML(p.category || "")}</p>
+          <p>${escapeHTML(p.price)} جنيه / ${escapeHTML(p.unit || "")}</p>
+          <span class="status-badge">
+            ${p.active ? "نشط" : "غير نشط"}
+          </span>
         </div>
-      </td>
-    </tr>
-  `).join("") || "<tr><td colspan='5'>لا توجد منتجات</td></tr>";
+      </div>
+      <div class="actions">
+        <button class="small" onclick="editProduct('${escapeHTML(p.id)}')">تعديل</button>
+        <button class="small danger" onclick="deleteProduct('${escapeHTML(p.id)}')">حذف</button>
+      </div>
+    </div>
+  `).join("");
 }
 
-$("productForm").addEventListener("submit", async e => {
+$("productForm").addEventListener("submit",saveProduct);
+
+async function saveProduct(e){
   e.preventDefault();
 
   $("saveBtn").disabled = true;
-  message("جاري حفظ المنتج...");
+  $("saveBtn").textContent = "جاري الحفظ...";
 
-  try {
-    const id = $("productId").value;
+  try{
+    let imageUrl = null;
     const file = $("image").files[0];
 
-    let imageUrl = null;
+    if(file) imageUrl = await uploadImage(file);
 
-    if (file) {
-      imageUrl = await uploadImage(file);
-    }
+    const id = $("productId").value;
 
     const product = {
-      name: $("name").value.trim(),
-      category: $("category").value.trim(),
-      price: Number($("price").value),
-      unit: $("unit").value.trim() || "كجم",
-      description: $("description").value.trim(),
-      is_active: $("active").checked
+      name:$("name").value.trim(),
+      category:$("category").value.trim(),
+      price:Number($("price").value),
+      unit:$("unit").value.trim(),
+      description:$("description").value.trim(),
+      active:$("active").checked
     };
 
-    if (imageUrl) product.image_url = imageUrl;
+    if(imageUrl) product.image_url = imageUrl;
 
     let result;
 
-    if (id) {
-      result = await db.from("products").update(product).eq("id",id);
-    } else {
-      result = await db.from("products").insert(product);
+    if(id){
+      result = await supabaseClient
+        .from("products")
+        .update(product)
+        .eq("id",id);
+    }else{
+      result = await supabaseClient
+        .from("products")
+        .insert(product);
     }
 
-    if (result.error) throw result.error;
+    if(result.error) throw result.error;
 
-    message("تم حفظ المنتج بنجاح ❤️");
-    resetForm();
+    showMessage("productMessage","تم حفظ المنتج بنجاح ✅");
+    resetProductForm();
     await loadProducts();
 
-  } catch (error) {
-    message("حصل خطأ: " + error.message, true);
-  } finally {
+  }catch(error){
+    showMessage("productMessage","فشل حفظ المنتج: " + error.message,true);
+  }finally{
     $("saveBtn").disabled = false;
+    $("saveBtn").textContent = "حفظ المنتج";
   }
-});
+}
 
-$("productsList").addEventListener("click", async e => {
-  const editId = e.target.dataset.edit;
-  const deleteId = e.target.dataset.delete;
+async function editProduct(id){
+  const {data,error} = await supabaseClient
+    .from("products")
+    .select("*")
+    .eq("id",id)
+    .single();
 
-  if (editId) {
-    const {data,error} = await db.from("products")
-      .select("*").eq("id",editId).single();
-
-    if (error) {
-      message(error.message,true);
-      return;
-    }
-
-    $("productId").value = data.id;
-    $("name").value = data.name || "";
-    $("category").value = data.category || "";
-    $("price").value = data.price;
-    $("unit").value = data.unit || "كجم";
-    $("description").value = data.description || "";
-    $("active").checked = data.is_active;
-    $("image").value = "";
-
-    $("formTitle").textContent = "تعديل المنتج";
-    $("saveBtn").textContent = "حفظ التعديلات";
-    $("cancelBtn").classList.remove("hidden");
-
-    window.scrollTo({top:0,behavior:"smooth"});
+  if(error){
+    showMessage("productMessage",error.message,true);
+    return;
   }
 
-  if (deleteId) {
-    if (!confirm("هل أنت متأكد من حذف هذا المنتج؟")) return;
+  $("productId").value = data.id;
+  $("name").value = data.name || "";
+  $("category").value = data.category || "";
+  $("price").value = data.price ?? 0;
+  $("unit").value = data.unit || "";
+  $("description").value = data.description || "";
+  $("active").checked = data.active !== false;
+  $("image").value = "";
 
-    const {error} = await db.from("products").delete().eq("id",deleteId);
+  $("productsSection").scrollIntoView({behavior:"smooth"});
+  showMessage("productMessage","أنت تعدّل المنتج: " + data.name);
+}
 
-    if (error) {
-      message("تعذر الحذف: " + error.message,true);
-      return;
-    }
+async function deleteProduct(id){
+  if(!confirm("هل أنت متأكد من حذف المنتج؟")) return;
 
-    message("تم حذف المنتج.");
-    await loadProducts();
+  const {error} = await supabaseClient
+    .from("products")
+    .delete()
+    .eq("id",id);
+
+  if(error){
+    showMessage("productMessage",error.message,true);
+    return;
   }
-});
 
-function resetForm() {
+  showMessage("productMessage","تم حذف المنتج.");
+  await loadProducts();
+}
+
+function resetProductForm(){
   $("productForm").reset();
   $("productId").value = "";
   $("active").checked = true;
-  $("unit").value = "كجم";
-  $("formTitle").textContent = "إضافة منتج جديد";
-  $("saveBtn").textContent = "حفظ المنتج";
-  $("cancelBtn").classList.add("hidden");
 }
 
-$("cancelBtn").addEventListener("click", resetForm);
+$("cancelBtn").addEventListener("click",resetProductForm);
+
+/* إدارة الطلبات */
+
+const statusLabels = {
+  new:"جديد",
+  pending:"قيد المراجعة",
+  confirmed:"تم التأكيد",
+  preparing:"جاري التجهيز",
+  delivered:"تم التوصيل",
+  cancelled:"ملغي"
+};
+
+document.querySelector(".order-tabs").addEventListener("click",e=>{
+  const btn = e.target.closest("button[data-tab]");
+  if(!btn) return;
+
+  currentTab = btn.dataset.tab;
+  currentOrdersPage = 1;
+
+  document.querySelectorAll(".order-tabs button").forEach(b=>{
+    b.classList.toggle("active",b === btn);
+  });
+
+  loadOrders();
+});
+
+$("orderSearch").addEventListener("input",()=>{
+  clearTimeout(searchTimer);
+
+  searchTimer = setTimeout(()=>{
+    currentOrdersPage = 1;
+    loadOrders();
+  },400);
+});
+
+$("refreshOrders").addEventListener("click",()=>{
+  loadOrders();
+});
+
+$("prevOrders").addEventListener("click",()=>{
+  if(currentOrdersPage > 1){
+    currentOrdersPage--;
+    loadOrders();
+  }
+});
+
+$("nextOrders").addEventListener("click",()=>{
+  currentOrdersPage++;
+  loadOrders();
+});
+
+async function loadOrders(){
+  const requestNumber = ++ordersRequestNumber;
+
+  $("ordersList").innerHTML =
+    '<div class="loading">جاري تحميل الطلبات...</div>';
+
+  clearMessage("ordersMessage");
+
+  let query = supabaseClient
+    .from("orders")
+    .select("*",{count:"exact"})
+    .order("created_at",{ascending:false});
+
+  if(currentTab === "new"){
+    query = query.in("status",["new","pending"]);
+  }else if(currentTab !== "all"){
+    query = query.eq("status",currentTab);
+  }
+
+  const search = $("orderSearch").value.trim();
+
+  if(search){
+    const safe = search.replace(/[,%()]/g,"").trim();
+
+    if(safe){
+      query = query.or(
+        `customer_name.ilike.%${safe}%,phone.ilike.%${safe}%,customer_phone.ilike.%${safe}%`
+      );
+    }
+  }
+
+  const from = (currentOrdersPage - 1) * ordersPerPage;
+  const to = from + ordersPerPage - 1;
+
+  const {data,error,count} = await query.range(from,to);
+
+  if(requestNumber !== ordersRequestNumber) return;
+
+  if(error){
+    $("ordersList").textContent =
+      "حصل خطأ في تحميل الطلبات: " + error.message;
+    $("ordersCount").textContent = "";
+    $("ordersPageInfo").textContent = "";
+    return;
+  }
+
+  const total = count || 0;
+  const totalPages = Math.max(1,Math.ceil(total / ordersPerPage));
+
+  if(currentOrdersPage > totalPages){
+    currentOrdersPage = totalPages;
+    return loadOrders();
+  }
+
+  $("ordersCount").textContent = "عدد الطلبات: " + total;
+  $("ordersPageInfo").textContent =
+    `صفحة ${currentOrdersPage} من ${totalPages}`;
+
+  $("prevOrders").disabled = currentOrdersPage <= 1;
+  $("nextOrders").disabled = currentOrdersPage >= totalPages;
+
+  if(!data || !data.length){
+    $("ordersList").innerHTML =
+      '<div class="empty-state">لا توجد طلبات في هذا القسم حاليًا</div>';
+    return;
+  }
+
+  $("ordersList").innerHTML = data.map(renderOrder).join("");
+}
+
+function renderOrder(order){
+  const id = order.id;
+  const items = Array.isArray(order.items) ? order.items : [];
+  const expanded = expandedOrders.has(String(id));
+
+  const date = order.created_at
+    ? new Date(order.created_at).toLocaleString("ar-EG")
+    : "غير محدد";
+
+  const status = statusLabels[order.status] || order.status || "غير محدد";
+
+  const itemsHTML = items.length ? `
+    <div class="order-items-wrap">
+      <table class="order-items">
+        <thead>
+          <tr>
+            <th>المنتج</th>
+            <th>الكمية</th>
+            <th>السعر</th>
+            <th>الإجمالي</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${items.map(item=>{
+            const name = item.name || item.product_name || item.title || "منتج";
+            const qty = item.qty ?? item.quantity ?? item.count ?? 1;
+            const price = item.price ?? item.unit_price ?? 0;
+            const total = item.total ?? item.line_total ??
+              (Number(qty) * Number(price));
+
+            return `
+              <tr>
+                <td>${escapeHTML(name)}</td>
+                <td>${escapeHTML(qty)}</td>
+                <td>${escapeHTML(price)} جنيه</td>
+                <td>${escapeHTML(total)} جنيه</td>
+              </tr>
+            `;
+          }).join("")}
+        </tbody>
+      </table>
+    </div>
+  ` : '<p>لا توجد تفاصيل منتجات محفوظة لهذا الطلب.</p>';
+
+  return `
+    <article class="order-card">
+      <div class="order-head">
+        <div>
+          <strong class="order-number">
+            طلب رقم #${escapeHTML(id)}
+          </strong>
+          <p><strong>${escapeHTML(order.customer_name || "بدون اسم")}</strong></p>
+          <p>${escapeHTML(order.phone || order.customer_phone || "")}</p>
+          <p class="muted">${escapeHTML(date)}</p>
+          <p><span class="status-badge">${escapeHTML(status)}</span></p>
+          <div class="order-total">
+            الإجمالي: ${escapeHTML(order.total ?? 0)} جنيه
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="small secondary"
+            onclick="toggleOrder('${escapeHTML(id)}')">
+            ${expanded ? "إخفاء التفاصيل" : "عرض التفاصيل"}
+          </button>
+
+          <button class="small danger"
+            onclick="deleteOrder('${escapeHTML(id)}')">
+            حذف الطلب
+          </button>
+        </div>
+      </div>
+
+      ${expanded ? `
+        <div class="order-details">
+          <p><strong>الاسم:</strong> ${escapeHTML(order.customer_name || "")}</p>
+          <p><strong>الهاتف:</strong> ${escapeHTML(order.phone || order.customer_phone || "")}</p>
+          <p><strong>المحافظة:</strong> ${escapeHTML(order.governorate || "")}</p>
+          <p><strong>المنطقة:</strong> ${escapeHTML(order.area || "")}</p>
+          <p><strong>العنوان:</strong> ${escapeHTML(order.address || "")}</p>
+          <p><strong>ملاحظات:</strong> ${escapeHTML(order.notes || "لا توجد")}</p>
+
+          <hr>
+          <strong>المنتجات المطلوبة</strong>
+          ${itemsHTML}
+
+          <p>المجموع: ${escapeHTML(order.subtotal ?? 0)} جنيه</p>
+          <p>التوصيل: ${escapeHTML(order.delivery_fee ?? 0)} جنيه</p>
+          <p><strong>الإجمالي النهائي: ${escapeHTML(order.total ?? 0)} جنيه</strong></p>
+        </div>
+      ` : ""}
+
+      <div class="status-row">
+        <label>حالة الطلب:</label>
+        <select id="status-${escapeHTML(id)}">
+          ${Object.entries(statusLabels).map(([key,label])=>`
+            <option value="${key}" ${order.status === key ? "selected" : ""}>
+              ${label}
+            </option>
+          `).join("")}
+        </select>
+
+        <button class="small"
+          onclick="updateOrderStatus('${escapeHTML(id)}')">
+          حفظ الحالة
+        </button>
+      </div>
+    </article>
+  `;
+}
+
+function toggleOrder(id){
+  id = String(id);
+
+  if(expandedOrders.has(id)){
+    expandedOrders.delete(id);
+  }else{
+    expandedOrders.add(id);
+  }
+
+  loadOrders();
+}
+
+async function updateOrderStatus(id){
+  const select = $("status-" + id);
+
+  if(!select) return;
+
+  const newStatus = select.value;
+
+  if(!statusLabels[newStatus]){
+    showMessage("ordersMessage","حالة الطلب غير صحيحة.",true);
+    return;
+  }
+
+  const buttons = select.parentElement.querySelectorAll("button");
+  buttons.forEach(btn=>btn.disabled = true);
+
+  try{
+    const {data,error} = await supabaseClient
+      .from("orders")
+      .update({status:newStatus})
+      .eq("id",id)
+      .select("id,status");
+
+    if(error) throw error;
+
+    if(!data || !data.length){
+      throw new Error("لم يتم تحديث الطلب. تأكد من صلاحيات الأدمن.");
+    }
+
+    showMessage(
+      "ordersMessage",
+      "تم تحديث حالة الطلب رقم #" + id + " بنجاح. ✅"
+    );
+
+    await loadOrders();
+
+  }catch(error){
+    showMessage(
+      "ordersMessage",
+      "فشل تحديث الحالة: " + error.message,
+      true
+    );
+    buttons.forEach(btn=>btn.disabled = false);
+  }
+}
+
+async function deleteOrder(id){
+  if(!confirm(
+    "هل أنت متأكد من حذف الطلب رقم #" + id +
+    " نهائيًا؟ لا يمكن التراجع عن الحذف."
+  )) return;
+
+  try{
+    const {data,error} = await supabaseClient
+      .from("orders")
+      .delete()
+      .eq("id",id)
+      .select("id");
+
+    if(error) throw error;
+
+    if(!data || !data.length){
+      throw new Error("لم يتم حذف الطلب. تأكد من صلاحيات الأدمن.");
+    }
+
+    expandedOrders.delete(String(id));
+
+    showMessage("ordersMessage","تم حذف الطلب نهائيًا.");
+    await loadOrders();
+
+  }catch(error){
+    showMessage("ordersMessage","فشل حذف الطلب: " + error.message,true);
+  }
+}
+
+/* بدء التحقق من الجلسة */
 
 checkAdmin();
 </script>
