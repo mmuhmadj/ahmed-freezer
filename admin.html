@@ -27,6 +27,7 @@ button.small{padding:7px 11px;font-size:13px}
 input,select,textarea{width:100%;padding:12px;border:1px solid var(--border);border-radius:9px;background:#fff;outline:none;margin:6px 0 14px;color:var(--text)}
 input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(22,101,52,.09)}
 input[type=checkbox]{width:auto;margin:0 0 0 7px}
+input[type=color]{height:48px;padding:5px;cursor:pointer}
 label{font-weight:bold;font-size:14px}
 .container{max-width:1250px;margin:25px auto;padding:0 16px}
 header{background:linear-gradient(135deg,#14532d,#15803d);color:#fff;border-radius:18px;padding:25px;margin-bottom:20px;box-shadow:var(--shadow)}
@@ -104,6 +105,47 @@ hr{border:0;border-top:1px solid var(--border);margin:22px 0}
 #login button{width:100%}
 .loading{text-align:center;padding:25px;color:var(--muted)}
 
+/* قسم تخصيص واجهة المتجر */
+.custom-intro{
+  background:#f0fdf4;border:1px solid #bbf7d0;
+  border-radius:12px;padding:14px 16px;margin-bottom:20px;
+  color:#166534;font-size:13px;
+}
+.custom-section{
+  border:1px solid var(--border);border-radius:13px;
+  padding:18px;margin:17px 0;background:#fff;
+}
+.custom-section h3{margin:0 0 5px;color:var(--green-dark)}
+.custom-section .section-note{margin:0 0 17px;color:var(--muted);font-size:13px}
+.custom-image-row{
+  display:grid;grid-template-columns:minmax(0,1fr) 150px;
+  gap:15px;align-items:center;
+}
+.custom-image-preview{
+  width:100%;height:115px;object-fit:contain;
+  border:1px dashed #cbd5e1;border-radius:11px;
+  background:#f8fafc;padding:7px;
+}
+.custom-image-placeholder{
+  width:100%;height:115px;border:1px dashed #cbd5e1;
+  border-radius:11px;background:#f8fafc;
+  display:grid;place-items:center;color:#94a3b8;font-size:12px;
+}
+.color-field{
+  border:1px solid var(--border);border-radius:11px;
+  padding:10px;background:#f8fafc;
+}
+.color-field label{display:block}
+.color-field input{margin:8px 0 0}
+.custom-save-bar{
+  position:sticky;bottom:10px;z-index:5;
+  background:#fff;border:1px solid var(--border);
+  box-shadow:0 5px 20px #0f172a12;border-radius:13px;
+  padding:12px;display:flex;justify-content:space-between;
+  align-items:center;gap:12px;margin-top:20px;
+}
+.custom-save-bar .muted{margin:0}
+.custom-file-note{font-size:12px;color:var(--muted);margin-top:-8px}
 @media(max-width:650px){
   .container{padding:0 9px;margin:12px auto}
   header{padding:19px;border-radius:13px}
@@ -130,6 +172,11 @@ hr{border:0;border-top:1px solid var(--border);margin:22px 0}
   .product-row .actions,.delivery-row .actions{flex-direction:column}
   .product-img{width:58px;height:58px}
   .pagination{gap:8px}
+  .custom-section{padding:13px}
+  .custom-image-row{grid-template-columns:1fr}
+  .custom-image-preview,.custom-image-placeholder{height:150px;max-width:220px}
+  .custom-save-bar{align-items:stretch;flex-direction:column}
+  .custom-save-bar button{width:100%}
 }
 </style>
 </head>
@@ -159,6 +206,7 @@ hr{border:0;border-top:1px solid var(--border);margin:22px 0}
     <button onclick="showSection('productsSection')">🛒 إدارة المنتجات</button>
     <button onclick="showSection('deliverySection')">🚚 المحافظات والتوصيل</button>
     <button onclick="showSection('settingsSection')">⚙️ إعدادات المحل</button>
+    <button onclick="showSection('customizationSection')">🎨 تخصيص واجهة المتجر</button>
     <button class="secondary" id="logoutBtn">تسجيل الخروج</button>
   </nav>
 
@@ -300,7 +348,7 @@ hr{border:0;border-top:1px solid var(--border);margin:22px 0}
     <div id="deliveryList" class="loading">جاري تحميل مناطق التوصيل...</div>
   </section>
 
-  <!-- الإعدادات -->
+  <!-- الإعدادات الأساسية -->
   <section id="settingsSection" class="card hidden">
     <h2>⚙️ إعدادات المحل</h2>
 
@@ -327,6 +375,134 @@ hr{border:0;border-top:1px solid var(--border);margin:22px 0}
     <div id="settingsMessage"></div>
   </section>
 
+  <!-- تخصيص واجهة المتجر -->
+  <section id="customizationSection" class="card hidden">
+    <h2>🎨 تخصيص واجهة المتجر</h2>
+
+    <div class="custom-intro">
+      من هنا تقدر تغيّر شكل ومحتوى واجهة المتجر. التعديلات دي منفصلة عن إدارة المنتجات والطلبات وإعدادات التوصيل.
+      اترك أي خانة فارغة لو عايز المتجر يستخدم النص الافتراضي.
+    </div>
+
+    <!-- الهوية والألوان -->
+    <div class="custom-section">
+      <h3>1. الهوية والألوان</h3>
+      <p class="section-note">الشعار وألوان الموقع الأساسية.</p>
+
+      <div class="custom-image-row">
+        <div>
+          <label for="customLogo">شعار المحل</label>
+          <input id="customLogo" type="file" accept="image/*">
+          <p class="custom-file-note">اختار صورة الشعار من جهازك. يفضل صورة مربعة بخلفية شفافة.</p>
+          <button type="button" class="small light" onclick="clearCustomImage('customLogo','customLogoPreview','logo_url')">إزالة الشعار المحفوظ</button>
+        </div>
+        <div>
+          <img id="customLogoPreview" class="custom-image-preview hidden" alt="معاينة شعار المحل">
+          <div id="customLogoPlaceholder" class="custom-image-placeholder">معاينة الشعار</div>
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="grid">
+        <div class="color-field">
+          <label for="primaryColor">اللون الأساسي</label>
+          <input id="primaryColor" type="color" value="#102d3d">
+        </div>
+        <div class="color-field">
+          <label for="secondaryColor">اللون الثانوي</label>
+          <input id="secondaryColor" type="color" value="#173f52">
+        </div>
+        <div class="color-field">
+          <label for="accentColor">اللون المميز</label>
+          <input id="accentColor" type="color" value="#d94a3d">
+        </div>
+      </div>
+    </div>
+
+    <!-- الواجهة الرئيسية -->
+    <div class="custom-section">
+      <h3>2. الواجهة الرئيسية</h3>
+      <p class="section-note">النصوص والصورة التي تظهر في أول صفحة المتجر.</p>
+
+      <label for="heroBadge">جملة الترحيب الصغيرة</label>
+      <input id="heroBadge" placeholder="مثال: أهلاً بيك في متجرنا">
+
+      <label for="heroTitle">العنوان الرئيسي</label>
+      <input id="heroTitle" placeholder="مثال: اختياراتك المفضلة لحد باب بيتك">
+
+      <label for="heroDescription">الوصف أسفل العنوان</label>
+      <textarea id="heroDescription" rows="3" placeholder="اكتب وصفًا مختصرًا لمتجرك"></textarea>
+
+      <label for="heroButtonText">نص زر التسوق</label>
+      <input id="heroButtonText" placeholder="مثال: تصفح المنتجات">
+
+      <hr>
+
+      <div class="custom-image-row">
+        <div>
+          <label for="heroImage">صورة الواجهة الرئيسية</label>
+          <input id="heroImage" type="file" accept="image/*">
+          <p class="custom-file-note">يفضل صورة أفقية عالية الجودة.</p>
+          <button type="button" class="small light" onclick="clearCustomImage('heroImage','heroImagePreview','hero_image_url')">إزالة الصورة المحفوظة</button>
+        </div>
+        <div>
+          <img id="heroImagePreview" class="custom-image-preview hidden" alt="معاينة صورة الواجهة الرئيسية">
+          <div id="heroImagePlaceholder" class="custom-image-placeholder">معاينة الصورة</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- عن المحل -->
+    <div class="custom-section">
+      <h3>3. قسم عن المحل</h3>
+      <p class="section-note">عرّف العملاء بالمحل والخدمات التي تقدمها.</p>
+
+      <label for="aboutTitle">عنوان القسم</label>
+      <input id="aboutTitle" placeholder="مثال: كل احتياجاتك في مكان واحد">
+
+      <label for="aboutDescription">وصف المحل</label>
+      <textarea id="aboutDescription" rows="4" placeholder="اكتب نبذة عن المحل"></textarea>
+
+      <hr>
+
+      <div class="custom-image-row">
+        <div>
+          <label for="aboutImage">صورة قسم عن المحل</label>
+          <input id="aboutImage" type="file" accept="image/*">
+          <p class="custom-file-note">اختار صورة مناسبة لنشاط المحل.</p>
+          <button type="button" class="small light" onclick="clearCustomImage('aboutImage','aboutImagePreview','about_image_url')">إزالة الصورة المحفوظة</button>
+        </div>
+        <div>
+          <img id="aboutImagePreview" class="custom-image-preview hidden" alt="معاينة صورة عن المحل">
+          <div id="aboutImagePlaceholder" class="custom-image-placeholder">معاينة الصورة</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- التواصل والفوتر -->
+    <div class="custom-section">
+      <h3>4. التواصل ونهاية الموقع</h3>
+      <p class="section-note">غيّر العناوين والنصوص الظاهرة في قسم التواصل وأسفل الموقع.</p>
+
+      <label for="contactTitle">عنوان قسم التواصل</label>
+      <input id="contactTitle" placeholder="مثال: تواصل معانا">
+
+      <label for="contactDescription">وصف قسم التواصل</label>
+      <textarea id="contactDescription" rows="2" placeholder="اكتب وصفًا لقسم التواصل"></textarea>
+
+      <label for="footerText">نص أسفل الموقع (الفوتر)</label>
+      <input id="footerText" placeholder="مثال: جميع الحقوق محفوظة">
+    </div>
+
+    <div id="customizationMessage"></div>
+
+    <div class="custom-save-bar">
+      <p class="muted">احفظ التغييرات بعد الانتهاء من التعديل.</p>
+      <button id="saveCustomizationBtn" type="button">💾 حفظ التخصيصات</button>
+    </div>
+  </section>
+
 </main>
 </div>
 
@@ -343,6 +519,9 @@ let expandedOrders = new Set();
 let searchTimer = null;
 let ordersRequestNumber = 0;
 let deliverySearchTimer = null;
+
+/* روابط الصور التي تم طلب إزالتها */
+let removedCustomizationImages = new Set();
 
 function $(id){return document.getElementById(id)}
 
@@ -376,7 +555,13 @@ function clearMessage(id){
 }
 
 function showSection(id){
-  ["ordersSection","productsSection","deliverySection","settingsSection"].forEach(section=>{
+  [
+    "ordersSection",
+    "productsSection",
+    "deliverySection",
+    "settingsSection",
+    "customizationSection"
+  ].forEach(section=>{
     $(section).classList.toggle("hidden",section !== id);
   });
 
@@ -384,6 +569,7 @@ function showSection(id){
   if(id === "productsSection") loadProducts();
   if(id === "deliverySection") loadDeliveryAreas();
   if(id === "settingsSection") loadShopSettings();
+  if(id === "customizationSection") loadCustomization();
 }
 
 /* تسجيل الدخول */
@@ -454,7 +640,7 @@ $("logoutBtn").addEventListener("click",async()=>{
   location.reload();
 });
 
-/* إعدادات المحل */
+/* إعدادات المحل الأساسية */
 async function loadShopSettings(){
   const {data,error} = await supabaseClient.from("shop_settings")
     .select("*").eq("id",1).maybeSingle();
@@ -500,6 +686,246 @@ async function saveSettings(){
     $("saveSettingsBtn").disabled = false;
   }
 }
+
+/* تخصيص واجهة المتجر */
+
+const customizationImageFields = [
+  {
+    input:"customLogo",
+    preview:"customLogoPreview",
+    placeholder:"customLogoPlaceholder",
+    column:"logo_url"
+  },
+  {
+    input:"heroImage",
+    preview:"heroImagePreview",
+    placeholder:"heroImagePlaceholder",
+    column:"hero_image_url"
+  },
+  {
+    input:"aboutImage",
+    preview:"aboutImagePreview",
+    placeholder:"aboutImagePlaceholder",
+    column:"about_image_url"
+  }
+];
+
+function setCustomizationPreview(inputId,previewId,placeholderId){
+  const input = $(inputId);
+  const preview = $(previewId);
+  const placeholder = $(placeholderId);
+
+  input.addEventListener("change",()=>{
+    const file = input.files && input.files[0];
+
+    if(!file){
+      return;
+    }
+
+    if(!file.type.startsWith("image/")){
+      showMessage("customizationMessage","من فضلك اختار ملف صورة صحيح.",true);
+      input.value = "";
+      return;
+    }
+
+    if(file.size > 8 * 1024 * 1024){
+      showMessage("customizationMessage","حجم الصورة كبير. اختار صورة أقل من 8 ميجابايت.",true);
+      input.value = "";
+      return;
+    }
+
+    removedCustomizationImages.delete(
+      customizationImageFields.find(item=>item.input === inputId)?.column
+    );
+
+    preview.src = URL.createObjectURL(file);
+    preview.classList.remove("hidden");
+    placeholder.classList.add("hidden");
+    clearMessage("customizationMessage");
+  });
+}
+
+customizationImageFields.forEach(item=>{
+  setCustomizationPreview(item.input,item.preview,item.placeholder);
+});
+
+function displayCustomizationImage(previewId,placeholderId,url){
+  const preview = $(previewId);
+  const placeholder = $(placeholderId);
+
+  if(url){
+    preview.src = url;
+    preview.classList.remove("hidden");
+    placeholder.classList.add("hidden");
+  }else{
+    preview.removeAttribute("src");
+    preview.classList.add("hidden");
+    placeholder.classList.remove("hidden");
+  }
+}
+
+function clearCustomImage(inputId,previewId,column){
+  const input = $(inputId);
+  const preview = $(previewId);
+  const placeholderId = customizationImageFields.find(item=>item.input === inputId)?.placeholder;
+
+  input.value = "";
+  preview.removeAttribute("src");
+  preview.classList.add("hidden");
+
+  if(placeholderId) $(placeholderId).classList.remove("hidden");
+
+  removedCustomizationImages.add(column);
+
+  showMessage(
+    "customizationMessage",
+    "تم تحديد إزالة الصورة. اضغط حفظ التخصيصات لتأكيد التغيير."
+  );
+}
+
+async function loadCustomization(){
+  clearMessage("customizationMessage");
+
+  try{
+    const {data,error} = await supabaseClient
+      .from("shop_settings")
+      .select("*")
+      .eq("id",1)
+      .maybeSingle();
+
+    if(error) throw error;
+
+    if(!data){
+      showMessage(
+        "customizationMessage",
+        "لا توجد إعدادات محفوظة للمحل حتى الآن. يمكنك إدخال التخصيصات وحفظها."
+      );
+    }else{
+      $("primaryColor").value = data.primary_color || "#102d3d";
+      $("secondaryColor").value = data.secondary_color || "#173f52";
+      $("accentColor").value = data.accent_color || "#d94a3d";
+
+      $("heroBadge").value = data.hero_badge || "";
+      $("heroTitle").value = data.hero_title || "";
+      $("heroDescription").value = data.hero_description || "";
+      $("heroButtonText").value = data.hero_button_text || "";
+
+      $("aboutTitle").value = data.about_title || "";
+      $("aboutDescription").value = data.about_description || "";
+
+      $("contactTitle").value = data.contact_title || "";
+      $("contactDescription").value = data.contact_description || "";
+      $("footerText").value = data.footer_text || "";
+
+      displayCustomizationImage(
+        "customLogoPreview",
+        "customLogoPlaceholder",
+        data.logo_url
+      );
+
+      displayCustomizationImage(
+        "heroImagePreview",
+        "heroImagePlaceholder",
+        data.hero_image_url
+      );
+
+      displayCustomizationImage(
+        "aboutImagePreview",
+        "aboutImagePlaceholder",
+        data.about_image_url
+      );
+    }
+
+    customizationImageFields.forEach(item=>{
+      $(item.input).value = "";
+    });
+
+    removedCustomizationImages.clear();
+
+  }catch(error){
+    showMessage(
+      "customizationMessage",
+      "فشل تحميل التخصيصات: " + error.message,
+      true
+    );
+  }
+}
+
+$("saveCustomizationBtn").addEventListener("click",saveCustomization);
+
+
+async function saveCustomization(){
+  const button = $("saveCustomizationBtn");
+
+  button.disabled = true;
+  button.textContent = "جاري حفظ التخصيصات...";
+
+  try{
+    const settings = {
+      primary_color:$("primaryColor").value,
+      secondary_color:$("secondaryColor").value,
+      accent_color:$("accentColor").value,
+
+      hero_badge:$("heroBadge").value.trim(),
+      hero_title:$("heroTitle").value.trim(),
+      hero_description:$("heroDescription").value.trim(),
+      hero_button_text:$("heroButtonText").value.trim(),
+
+      about_title:$("aboutTitle").value.trim(),
+      about_description:$("aboutDescription").value.trim(),
+
+      contact_title:$("contactTitle").value.trim(),
+      contact_description:$("contactDescription").value.trim(),
+      footer_text:$("footerText").value.trim(),
+
+      updated_at:new Date().toISOString()
+    };
+
+    /* رفع الصور الجديدة أو إزالة الصور المطلوبة */
+    for(const item of customizationImageFields){
+      const file = $(item.input).files[0];
+
+      if(file){
+        settings[item.column] = await uploadImage(file);
+      }else if(removedCustomizationImages.has(item.column)){
+        settings[item.column] = null;
+      }
+    }
+
+    /* تحديث السجل الموجود بدل إنشاء سجل جديد */
+    const {data,error} = await supabaseClient
+      .from("shop_settings")
+      .update(settings)
+      .eq("id",1)
+      .select("id");
+
+    if(error) throw error;
+
+    if(!data || !data.length){
+      throw new Error(
+        "لم يتم العثور على إعدادات المحل. افتح إعدادات المحل واحفظ البيانات الأساسية أولًا."
+      );
+    }
+
+    showMessage(
+      "customizationMessage",
+      "تم حفظ تخصيصات واجهة المتجر بنجاح ✅"
+    );
+
+    await loadCustomization();
+
+  }catch(error){
+    showMessage(
+      "customizationMessage",
+      "فشل حفظ التخصيصات: " + error.message,
+      true
+    );
+  }finally{
+    button.disabled = false;
+    button.textContent = "💾 حفظ التخصيصات";
+  }
+}
+
 
 /* إدارة المحافظات ومناطق التوصيل */
 async function loadDeliveryAreas(){
