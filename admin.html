@@ -9,134 +9,90 @@
 
 <style>
 :root{
-  --green:#166534;
-  --green-dark:#14532d;
-  --green-light:#dcfce7;
-  --bg:#f1f5f9;
-  --white:#fff;
-  --text:#1e293b;
-  --muted:#64748b;
-  --border:#e2e8f0;
-  --red:#dc2626;
+  --green:#166534;--green-dark:#14532d;--green-light:#dcfce7;
+  --bg:#f1f5f9;--white:#fff;--text:#1e293b;--muted:#64748b;
+  --border:#e2e8f0;--red:#dc2626;
   --shadow:0 5px 20px rgba(15,23,42,.06);
 }
 *{box-sizing:border-box}
-body{
-  margin:0;background:var(--bg);color:var(--text);
-  font-family:Tahoma,Arial,sans-serif;font-size:15px;line-height:1.7;
-}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif;font-size:15px;line-height:1.7}
 button,input,select,textarea{font:inherit}
-button{
-  border:0;border-radius:9px;padding:10px 16px;
-  background:var(--green);color:white;cursor:pointer;
-  font-weight:bold;transition:.2s;
-}
+button{border:0;border-radius:9px;padding:10px 16px;background:var(--green);color:white;cursor:pointer;font-weight:bold;transition:.2s}
 button:hover{filter:brightness(.94)}
 button:disabled{opacity:.45;cursor:not-allowed}
 button.secondary{background:#64748b}
 button.danger{background:var(--red)}
 button.light{background:#e2e8f0;color:#334155}
 button.small{padding:7px 11px;font-size:13px}
-input,select,textarea{
-  width:100%;padding:12px;border:1px solid var(--border);
-  border-radius:9px;background:#fff;outline:none;
-  margin:6px 0 14px;color:var(--text);
-}
-input:focus,select:focus,textarea:focus{
-  border-color:var(--green);
-  box-shadow:0 0 0 3px rgba(22,101,52,.09);
-}
+input,select,textarea{width:100%;padding:12px;border:1px solid var(--border);border-radius:9px;background:#fff;outline:none;margin:6px 0 14px;color:var(--text)}
+input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(22,101,52,.09)}
 input[type=checkbox]{width:auto;margin:0 0 0 7px}
 label{font-weight:bold;font-size:14px}
 .container{max-width:1250px;margin:25px auto;padding:0 16px}
-header{
-  background:linear-gradient(135deg,#14532d,#15803d);
-  color:#fff;border-radius:18px;padding:25px;margin-bottom:20px;
-  box-shadow:var(--shadow);
-}
+header{background:linear-gradient(135deg,#14532d,#15803d);color:#fff;border-radius:18px;padding:25px;margin-bottom:20px;box-shadow:var(--shadow)}
 header h1{margin:0;font-size:27px}
 header p{margin:5px 0 0;color:#dcfce7}
-.card{
-  background:var(--white);padding:22px;border-radius:15px;
-  margin-bottom:18px;box-shadow:var(--shadow);
-  border:1px solid #edf0f3;
-}
+.card{background:var(--white);padding:22px;border-radius:15px;margin-bottom:18px;box-shadow:var(--shadow);border:1px solid #edf0f3}
 h2{margin:0 0 18px;color:var(--green-dark);font-size:21px}
 h3{font-size:17px;color:var(--text)}
 .hidden{display:none!important}
-.grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:14px;
-}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
 .actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .main-nav{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px}
 .main-nav button{padding:11px 18px}
-.message{
-  padding:11px 14px;border-radius:9px;margin:12px 0;
-  background:#ecfdf5;color:#166534;font-size:14px;
-}
+.message{padding:11px 14px;border-radius:9px;margin:12px 0;background:#ecfdf5;color:#166534;font-size:14px}
 .message.error{background:#fef2f2;color:#b91c1c}
 .muted{color:var(--muted);font-size:13px}
 hr{border:0;border-top:1px solid var(--border);margin:22px 0}
-.order-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}
-.order-tabs button{
-  background:#e2e8f0;color:#334155;padding:9px 14px;font-size:13px;
-}
-.order-tabs button.active{background:var(--green);color:#fff}
-.order-tools{
-  display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;
-}
+
+/* إدارة الطلبات */
+.orders-summary{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0}
+.summary-box{background:#f8fafc;border:1px solid var(--border);border-radius:13px;padding:15px;text-align:center}
+.summary-box strong{display:block;font-size:23px;color:var(--green-dark);overflow-wrap:anywhere}
+.summary-box span{font-size:12px;color:var(--muted)}
+.summary-box.money{background:#f0fdf4;border-color:#bbf7d0}
+.summary-box.money strong{color:#15803d}
+.order-tools{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
 .order-tools input{margin:5px 0 13px}
-.order-card{
-  border:1px solid var(--border);border-radius:13px;
-  padding:17px;margin:13px 0;background:#fff;
-}
-.order-head{
-  display:flex;justify-content:space-between;align-items:flex-start;gap:15px;
-}
-.order-head p{margin:4px 0}
-.order-number{font-size:17px;color:var(--green-dark)}
-.order-total{font-size:18px;font-weight:bold;color:var(--green-dark)}
-.status-badge{
-  display:inline-block;padding:3px 10px;border-radius:20px;
-  background:#f1f5f9;font-size:12px;font-weight:bold;
-}
-.order-details{background:#f8fafc;padding:15px;border-radius:10px;margin-top:15px}
-.order-details p{margin:7px 0}
+.order-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 18px}
+.order-tabs button{background:#f1f5f9;color:#475569;padding:9px 17px;font-size:13px;border:1px solid var(--border)}
+.order-tabs button.active{background:var(--green);color:white;border-color:var(--green)}
+.order-card{background:#fff;border:1px solid var(--border);border-radius:14px;margin:12px 0;overflow:hidden;transition:.2s}
+.order-card-top{padding:16px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.order-main-info{min-width:0}
+.order-main-info p{margin:3px 0}
+.order-number{font-size:14px;color:var(--muted)}
+.order-customer{font-weight:bold;font-size:17px}
+.order-phone{color:#475569;direction:ltr;text-align:right}
+.order-total{font-size:19px;font-weight:bold;color:var(--green-dark);margin-top:5px}
+.order-card-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.order-details{border-top:1px solid var(--border);background:#f8fafc;padding:16px}
+.order-info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 12px}
+.order-info-item{background:#fff;padding:11px 12px;border:1px solid var(--border);border-radius:9px;overflow-wrap:anywhere}
+.order-info-item strong{display:block;font-size:12px;color:var(--muted);margin-bottom:3px}
+.order-info-item span{font-size:14px;font-weight:bold}
 .order-items-wrap{overflow-x:auto}
-.order-items{width:100%;border-collapse:collapse;margin:12px 0;min-width:420px}
-.order-items th,.order-items td{
-  padding:10px;text-align:right;border-bottom:1px solid var(--border);
-}
+.order-items{width:100%;border-collapse:collapse;margin:12px 0;min-width:420px;background:#fff}
+.order-items th,.order-items td{padding:10px;text-align:right;border-bottom:1px solid var(--border)}
 .order-items th{background:#edf2f7}
-.status-row{
-  display:flex;align-items:center;flex-wrap:wrap;gap:10px;
-  border-top:1px solid var(--border);margin-top:15px;padding-top:13px;
-}
-.status-row select{width:auto;min-width:165px;margin:0}
-.pagination{
-  display:flex;justify-content:center;align-items:center;
-  gap:13px;margin:20px 0 5px;
-}
-.empty-state{
-  text-align:center;padding:35px 10px;color:var(--muted);
-  background:#f8fafc;border-radius:12px;
-}
-.product-img{
-  width:72px;height:72px;object-fit:cover;
-  border-radius:10px;border:1px solid var(--border);
-}
-.product-row,.delivery-row{
-  display:flex;justify-content:space-between;align-items:center;
-  gap:15px;padding:13px 0;border-bottom:1px solid var(--border);
-}
+.order-status-box{margin-top:16px;padding:14px;background:#fff;border:1px solid var(--border);border-radius:10px}
+.order-status-box label{display:block;margin-bottom:7px}
+.order-status-controls{display:flex;gap:8px;align-items:center}
+.order-status-controls select{margin:0;flex:1}
+.order-status-hint{margin:7px 0 0}
+.order-danger-zone{margin-top:15px;padding-top:13px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.status-badge{display:inline-block;padding:4px 11px;border-radius:20px;background:#f1f5f9;color:#475569;font-size:12px;font-weight:bold}
+.status-new{background:#fff7ed;color:#c2410c}
+.status-confirmed{background:#eff6ff;color:#1d4ed8}
+.status-cancelled{background:#fee2e2;color:#b91c1c}
+.status-legacy{background:#f1f5f9;color:#475569}
+.pagination{display:flex;justify-content:center;align-items:center;gap:13px;margin:20px 0 5px}
+.empty-state{text-align:center;padding:35px 10px;color:var(--muted);background:#f8fafc;border-radius:12px}
+.product-img{width:72px;height:72px;object-fit:cover;border-radius:10px;border:1px solid var(--border)}
+.product-row,.delivery-row{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:13px 0;border-bottom:1px solid var(--border)}
 .product-info{display:flex;align-items:center;gap:13px;min-width:0}
 .product-info p{margin:3px 0}
-.stock-info{
-  color:var(--green-dark);
-  font-weight:bold;
-  font-size:14px;
-}
+.stock-info{color:var(--green-dark);font-weight:bold;font-size:14px}
 .stock-empty{color:var(--red)}
 .check-row{display:flex;align-items:center;margin:8px 0 15px}
 .delivery-row-info{min-width:0}
@@ -147,6 +103,7 @@ hr{border:0;border-top:1px solid var(--border);margin:22px 0}
 #login h2{text-align:center}
 #login button{width:100%}
 .loading{text-align:center;padding:25px;color:var(--muted)}
+
 @media(max-width:650px){
   .container{padding:0 9px;margin:12px auto}
   header{padding:19px;border-radius:13px}
@@ -155,12 +112,20 @@ hr{border:0;border-top:1px solid var(--border);margin:22px 0}
   h2{font-size:19px}
   .main-nav button{flex:1 1 42%;font-size:13px;padding:10px 7px}
   .order-tools{grid-template-columns:1fr}
-  .order-head{display:block}
-  .order-head .actions{margin-top:12px}
-  .status-row{align-items:stretch}
-  .status-row label{width:100%}
-  .status-row select{width:100%}
-  .status-row button{width:100%}
+  .order-card-top{display:block}
+  .order-card-actions{margin-top:12px}
+  .order-card-actions button{flex:1}
+  .orders-summary{gap:6px}
+  .summary-box{padding:10px 4px}
+  .summary-box strong{font-size:17px}
+  .summary-box span{font-size:10px}
+  .order-tabs{display:grid;grid-template-columns:repeat(2,1fr)}
+  .order-tabs button{width:100%;padding:9px 5px}
+  .order-info-grid{grid-template-columns:1fr}
+  .order-status-controls{flex-direction:column}
+  .order-status-controls select{width:100%}
+  .order-danger-zone{align-items:flex-start;flex-direction:column}
+  .order-danger-zone button{width:100%}
   .product-row,.delivery-row{align-items:flex-start}
   .product-row .actions,.delivery-row .actions{flex-direction:column}
   .product-img{width:58px;height:58px}
@@ -197,23 +162,30 @@ hr{border:0;border-top:1px solid var(--border);margin:22px 0}
     <button class="secondary" id="logoutBtn">تسجيل الخروج</button>
   </nav>
 
-  <!-- الطلبات -->
+  <!-- إدارة الطلبات -->
   <section id="ordersSection" class="card">
     <h2>📦 إدارة الطلبات</h2>
-    <p class="muted">أحدث الطلبات تظهر أولًا — 20 طلبًا في كل صفحة.</p>
+    <p class="muted">تابع الطلبات الجديدة وأكد الطلبات أو ألغها. الإجمالي يحسب الطلبات المؤكدة فقط.</p>
 
-    <div class="order-tabs">
-      <button class="active" data-tab="new">الطلبات الجديدة</button>
-      <button data-tab="confirmed">المؤكدة</button>
-      <button data-tab="preparing">جاري التجهيز</button>
-      <button data-tab="delivered">تم التوصيل</button>
-      <button data-tab="cancelled">الملغية</button>
-      <button data-tab="all">كل الطلبات</button>
+    <div class="orders-summary">
+      <div class="summary-box">
+        <strong id="summaryCount">-</strong>
+        <span>إجمالي عدد الطلبات</span>
+      </div>
+      <div class="summary-box money">
+        <strong id="summaryTotal">-</strong>
+        <span>إجمالي الطلبات المؤكدة</span>
+      </div>
     </div>
 
     <div class="order-tools">
-      <input id="orderSearch" placeholder="🔍 ابحث باسم العميل أو رقم الهاتف">
-      <button id="refreshOrders" class="secondary">🔄 تحديث الطلبات</button>
+      <input id="orderSearch" placeholder="🔍 ابحث باسم العميل أو رقم الهاتف أو رقم الطلب">
+      <button id="refreshOrders" class="secondary">🔄 تحديث</button>
+    </div>
+
+    <div class="order-tabs">
+      <button class="active" data-tab="new">🆕 الطلبات الجديدة</button>
+      <button data-tab="all">كل الطلبات</button>
     </div>
 
     <div id="ordersMessage"></div>
@@ -253,15 +225,7 @@ hr{border:0;border-top:1px solid var(--border);margin:22px 0}
         </div>
         <div>
           <label>المخزون المتاح بالكيلو</label>
-          <input
-            id="stock"
-            type="number"
-            min="0"
-            step="0.01"
-            value="0"
-            required
-            placeholder="مثال: 10.50"
-          >
+          <input id="stock" type="number" min="0" step="0.01" value="0" required placeholder="مثال: 10.50">
           <p class="muted">يمكن إدخال كسور مثل 0.5 أو 1.25 كيلو.</p>
         </div>
       </div>
@@ -292,9 +256,7 @@ hr{border:0;border-top:1px solid var(--border);margin:22px 0}
   <!-- المحافظات والتوصيل -->
   <section id="deliverySection" class="card hidden">
     <h2>🚚 إدارة المحافظات ومناطق التوصيل</h2>
-    <p class="muted">
-      أضف المحافظة والمنطقة وحدد رسوم التوصيل. يمكنك إضافة أكثر من منطقة لنفس المحافظة.
-    </p>
+    <p class="muted">أضف المحافظة والمنطقة وحدد رسوم التوصيل. يمكنك إضافة أكثر من منطقة لنفس المحافظة.</p>
 
     <form id="deliveryForm">
       <input type="hidden" id="deliveryId">
@@ -352,11 +314,7 @@ hr{border:0;border-top:1px solid var(--border);margin:22px 0}
     <input id="shopAddress">
 
     <label>رابط موقع المحل على الخريطة</label>
-    <input
-      id="mapUrl"
-      type="url"
-      placeholder="https://maps.google.com/..."
-    >
+    <input id="mapUrl" type="url" placeholder="https://maps.google.com/...">
     <p class="muted">ضع رابط مشاركة موقع المحل من خرائط Google، وسيظهر زر فتح الخريطة في صفحة المتجر.</p>
 
     <label>مواعيد العمل</label>
@@ -376,10 +334,7 @@ hr{border:0;border-top:1px solid var(--border);margin:22px 0}
 const SUPABASE_URL = "https://dpfqzhateshqbqpksirv.supabase.co";
 const SUPABASE_KEY = "sb_publishable_IoXBVyRmLEEuXQKe0-x27A_rJtS2cxU";
 
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+const supabaseClient = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let currentTab = "new";
 let currentOrdersPage = 1;
@@ -389,28 +344,26 @@ let searchTimer = null;
 let ordersRequestNumber = 0;
 let deliverySearchTimer = null;
 
-function $(id){
-  return document.getElementById(id);
-}
+function $(id){return document.getElementById(id)}
 
 function escapeHTML(value){
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#39;"
+  return String(value ?? "").replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   })[c]);
 }
 
 function formatQuantity(value){
-  const number = Number(value ?? 0);
-  return number.toLocaleString("en-US",{
-    minimumFractionDigits:0,
-    maximumFractionDigits:2
+  return Number(value ?? 0).toLocaleString("en-US",{
+    minimumFractionDigits:0,maximumFractionDigits:2
   });
 }
 
+function formatMoney(value){
+  return Number(value ?? 0).toLocaleString("ar-EG",{
+    minimumFractionDigits:0,
+    maximumFractionDigits:2
+  }) + " جنيه";
+}
 function showMessage(id,message,error=false){
   const el = $(id);
   el.textContent = message;
@@ -423,12 +376,7 @@ function clearMessage(id){
 }
 
 function showSection(id){
-  [
-    "ordersSection",
-    "productsSection",
-    "deliverySection",
-    "settingsSection"
-  ].forEach(section=>{
+  ["ordersSection","productsSection","deliverySection","settingsSection"].forEach(section=>{
     $(section).classList.toggle("hidden",section !== id);
   });
 
@@ -439,8 +387,7 @@ function showSection(id){
 }
 
 /* تسجيل الدخول */
-
-$("loginBtn").addEventListener("click", login);
+$("loginBtn").addEventListener("click",login);
 
 async function login(){
   const email = $("email").value.trim();
@@ -455,13 +402,8 @@ async function login(){
   $("loginBtn").textContent = "جاري تسجيل الدخول...";
 
   try{
-    const {error} = await supabaseClient.auth.signInWithPassword({
-      email,
-      password
-    });
-
+    const {error} = await supabaseClient.auth.signInWithPassword({email,password});
     if(error) throw error;
-
     await checkAdmin();
   }catch(error){
     showMessage("loginMessage","فشل تسجيل الدخول: " + error.message,true);
@@ -473,9 +415,7 @@ async function login(){
 
 async function checkAdmin(){
   try{
-    const {data:{user},error:userError} =
-      await supabaseClient.auth.getUser();
-
+    const {data:{user},error:userError} = await supabaseClient.auth.getUser();
     if(userError) throw userError;
 
     if(!user){
@@ -487,11 +427,7 @@ async function checkAdmin(){
     const {data,error} = await supabaseClient.rpc("is_admin");
 
     if(error){
-      showMessage(
-        "loginMessage",
-        "خطأ في التحقق من صلاحية الأدمن: " + error.message,
-        true
-      );
+      showMessage("loginMessage","خطأ في التحقق من صلاحية الأدمن: " + error.message,true);
       return;
     }
 
@@ -519,13 +455,9 @@ $("logoutBtn").addEventListener("click",async()=>{
 });
 
 /* إعدادات المحل */
-
 async function loadShopSettings(){
-  const {data,error} = await supabaseClient
-    .from("shop_settings")
-    .select("*")
-    .eq("id",1)
-    .maybeSingle();
+  const {data,error} = await supabaseClient.from("shop_settings")
+    .select("*").eq("id",1).maybeSingle();
 
   if(error){
     showMessage("settingsMessage",error.message,true);
@@ -559,12 +491,8 @@ async function saveSettings(){
   $("saveSettingsBtn").disabled = true;
 
   try{
-    const {error} = await supabaseClient
-      .from("shop_settings")
-      .upsert(settings);
-
+    const {error} = await supabaseClient.from("shop_settings").upsert(settings);
     if(error) throw error;
-
     showMessage("settingsMessage","تم حفظ الإعدادات بنجاح ✅");
   }catch(error){
     showMessage("settingsMessage",error.message,true);
@@ -574,34 +502,27 @@ async function saveSettings(){
 }
 
 /* إدارة المحافظات ومناطق التوصيل */
-
 async function loadDeliveryAreas(){
   $("deliveryList").textContent = "جاري تحميل مناطق التوصيل...";
   clearMessage("deliveryMessage");
 
   try{
-    const {data,error} = await supabaseClient
-      .from("delivery_areas")
-      .select("*")
-      .order("governorate",{ascending:true})
-      .order("area",{ascending:true});
+    const {data,error} = await supabaseClient.from("delivery_areas")
+      .select("*").order("governorate",{ascending:true}).order("area",{ascending:true});
 
     if(error) throw error;
 
     const search = $("deliverySearch").value.trim().toLowerCase();
-
     const filtered = (data || []).filter(item=>{
       const text = (item.governorate + " " + item.area).toLowerCase();
       return text.includes(search);
     });
 
     $("deliveryCount").textContent =
-      "عدد المناطق: " + filtered.length +
-      " — إجمالي السجلات: " + (data || []).length;
+      "عدد المناطق: " + filtered.length + " — إجمالي السجلات: " + (data || []).length;
 
     if(!filtered.length){
-      $("deliveryList").innerHTML =
-        '<div class="empty-state">لا توجد مناطق توصيل مطابقة للبحث</div>';
+      $("deliveryList").innerHTML = '<div class="empty-state">لا توجد مناطق توصيل مطابقة للبحث</div>';
       return;
     }
 
@@ -615,29 +536,18 @@ async function loadDeliveryAreas(){
             ${item.is_active ? "متاحة للطلب" : "متوقفة"}
           </span>
         </div>
-
         <div class="actions">
-          <button class="small"
-            onclick="editDeliveryArea(${Number(item.id)})">
-            تعديل
-          </button>
-
-          <button class="small secondary"
-            onclick="toggleDeliveryArea(${Number(item.id)},${!item.is_active})">
+          <button class="small" onclick="editDeliveryArea(${Number(item.id)})">تعديل</button>
+          <button class="small secondary" onclick="toggleDeliveryArea(${Number(item.id)},${!item.is_active})">
             ${item.is_active ? "إيقاف" : "تفعيل"}
           </button>
-
-          <button class="small danger"
-            onclick="deleteDeliveryArea(${Number(item.id)})">
-            حذف
-          </button>
+          <button class="small danger" onclick="deleteDeliveryArea(${Number(item.id)})">حذف</button>
         </div>
       </div>
     `).join("");
 
   }catch(error){
-    $("deliveryList").textContent =
-      "فشل تحميل مناطق التوصيل: " + error.message;
+    $("deliveryList").textContent = "فشل تحميل مناطق التوصيل: " + error.message;
   }
 }
 
@@ -647,7 +557,6 @@ async function saveDeliveryArea(e){
   e.preventDefault();
 
   const id = $("deliveryId").value;
-
   const governorate = $("deliveryGovernorate").value.trim();
   const area = $("deliveryArea").value.trim();
   const deliveryFee = Number($("deliveryFee").value);
@@ -663,9 +572,7 @@ async function saveDeliveryArea(e){
   }
 
   const record = {
-    governorate,
-    area,
-    delivery_fee:deliveryFee,
+    governorate,area,delivery_fee:deliveryFee,
     is_active:$("deliveryActive").checked
   };
 
@@ -676,38 +583,20 @@ async function saveDeliveryArea(e){
     let result;
 
     if(id){
-      result = await supabaseClient
-        .from("delivery_areas")
-        .update(record)
-        .eq("id",id)
-        .select("id");
+      result = await supabaseClient.from("delivery_areas").update(record).eq("id",id).select("id");
     }else{
-      result = await supabaseClient
-        .from("delivery_areas")
-        .insert(record)
-        .select("id");
+      result = await supabaseClient.from("delivery_areas").insert(record).select("id");
     }
 
     if(result.error) throw result.error;
+    if(!result.data || !result.data.length) throw new Error("لم يتم حفظ المنطقة. راجع صلاحيات الأدمن.");
 
-    if(!result.data || !result.data.length){
-      throw new Error("لم يتم حفظ المنطقة. راجع صلاحيات الأدمن.");
-    }
-
-    showMessage(
-      "deliveryMessage",
-      id ? "تم تعديل منطقة التوصيل بنجاح ✅" : "تمت إضافة منطقة التوصيل بنجاح ✅"
-    );
-
+    showMessage("deliveryMessage",id ? "تم تعديل منطقة التوصيل بنجاح ✅" : "تمت إضافة منطقة التوصيل بنجاح ✅");
     resetDeliveryForm();
     await loadDeliveryAreas();
 
   }catch(error){
-    showMessage(
-      "deliveryMessage",
-      "فشل حفظ منطقة التوصيل: " + error.message,
-      true
-    );
+    showMessage("deliveryMessage","فشل حفظ منطقة التوصيل: " + error.message,true);
   }finally{
     $("saveDeliveryBtn").disabled = false;
     $("saveDeliveryBtn").textContent = "إضافة منطقة التوصيل";
@@ -716,11 +605,8 @@ async function saveDeliveryArea(e){
 
 async function editDeliveryArea(id){
   try{
-    const {data,error} = await supabaseClient
-      .from("delivery_areas")
-      .select("*")
-      .eq("id",id)
-      .single();
+    const {data,error} = await supabaseClient.from("delivery_areas")
+      .select("*").eq("id",id).single();
 
     if(error) throw error;
 
@@ -732,11 +618,7 @@ async function editDeliveryArea(id){
 
     $("saveDeliveryBtn").textContent = "حفظ التعديلات";
     $("deliveryForm").scrollIntoView({behavior:"smooth"});
-
-    showMessage(
-      "deliveryMessage",
-      "أنت تعدّل منطقة: " + data.area
-    );
+    showMessage("deliveryMessage","أنت تعدّل منطقة: " + data.area);
 
   }catch(error){
     showMessage("deliveryMessage","فشل تحميل المنطقة: " + error.message,true);
@@ -745,27 +627,16 @@ async function editDeliveryArea(id){
 
 async function toggleDeliveryArea(id,newActive){
   const action = newActive ? "تفعيل" : "إيقاف";
-
   if(!confirm("هل تريد " + action + " منطقة التوصيل؟")) return;
 
   try{
-    const {data,error} = await supabaseClient
-      .from("delivery_areas")
-      .update({is_active:newActive})
-      .eq("id",id)
-      .select("id");
+    const {data,error} = await supabaseClient.from("delivery_areas")
+      .update({is_active:newActive}).eq("id",id).select("id");
 
     if(error) throw error;
+    if(!data || !data.length) throw new Error("لم يتم تحديث المنطقة. راجع صلاحيات الأدمن.");
 
-    if(!data || !data.length){
-      throw new Error("لم يتم تحديث المنطقة. راجع صلاحيات الأدمن.");
-    }
-
-    showMessage(
-      "deliveryMessage",
-      newActive ? "تم تفعيل المنطقة بنجاح." : "تم إيقاف المنطقة بنجاح."
-    );
-
+    showMessage("deliveryMessage",newActive ? "تم تفعيل المنطقة بنجاح." : "تم إيقاف المنطقة بنجاح.");
     await loadDeliveryAreas();
 
   }catch(error){
@@ -777,19 +648,13 @@ async function deleteDeliveryArea(id){
   if(!confirm("هل أنت متأكد من حذف منطقة التوصيل نهائيًا؟")) return;
 
   try{
-    const {data,error} = await supabaseClient
-      .from("delivery_areas")
-      .delete()
-      .eq("id",id)
-      .select("id");
+    const {data,error} = await supabaseClient.from("delivery_areas")
+      .delete().eq("id",id).select("id");
 
     if(error) throw error;
+    if(!data || !data.length) throw new Error("لم يتم حذف المنطقة. راجع صلاحيات الأدمن.");
 
-    if(!data || !data.length){
-      throw new Error("لم يتم حذف المنطقة. راجع صلاحيات الأدمن.");
-    }
-
-    showMessage("deliveryMessage","تم حذف منطقة التوصيل بنجاح.");
+    showMessage("deliveryMessage","تم حذف المنطقة بنجاح.");
     await loadDeliveryAreas();
 
   }catch(error){
@@ -817,36 +682,24 @@ $("deliverySearch").addEventListener("input",()=>{
 });
 
 /* الصور والمنتجات */
-
 async function uploadImage(file){
   if(!file) return null;
 
   const ext = file.name.split(".").pop();
-  const path = Date.now() + "-" +
-    Math.random().toString(36).slice(2) + "." + ext;
+  const path = Date.now() + "-" + Math.random().toString(36).slice(2) + "." + ext;
 
-  const {error} = await supabaseClient
-    .storage
-    .from("product-images")
-    .upload(path,file);
-
+  const {error} = await supabaseClient.storage.from("product-images").upload(path,file);
   if(error) throw error;
 
-  const {data} = supabaseClient
-    .storage
-    .from("product-images")
-    .getPublicUrl(path);
-
+  const {data} = supabaseClient.storage.from("product-images").getPublicUrl(path);
   return data.publicUrl;
 }
 
 async function loadProducts(){
   $("productsList").textContent = "جاري تحميل المنتجات...";
 
-  const {data,error} = await supabaseClient
-    .from("products")
-    .select("*")
-    .order("created_at",{ascending:false});
+  const {data,error} = await supabaseClient.from("products")
+    .select("*").order("created_at",{ascending:false});
 
   if(error){
     $("productsList").textContent = "خطأ في تحميل المنتجات: " + error.message;
@@ -854,8 +707,7 @@ async function loadProducts(){
   }
 
   if(!data || !data.length){
-    $("productsList").innerHTML =
-      '<div class="empty-state">لا توجد منتجات حاليًا</div>';
+    $("productsList").innerHTML = '<div class="empty-state">لا توجد منتجات حاليًا</div>';
     return;
   }
 
@@ -866,9 +718,7 @@ async function loadProducts(){
     return `
       <div class="product-row">
         <div class="product-info">
-          ${p.image_url
-            ? `<img class="product-img" src="${escapeHTML(p.image_url)}" alt="">`
-            : ""}
+          ${p.image_url ? `<img class="product-img" src="${escapeHTML(p.image_url)}" alt="">` : ""}
           <div>
             <strong>${escapeHTML(p.name)}</strong>
             <p class="muted">${escapeHTML(p.category || "")}</p>
@@ -876,9 +726,7 @@ async function loadProducts(){
             <p class="stock-info ${stock <= 0 ? "stock-empty" : ""}">
               المخزون: ${formatQuantity(stock)} ${escapeHTML(p.unit || "كجم")}
             </p>
-            <span class="status-badge">
-              ${isActive ? "نشط" : "غير نشط"}
-            </span>
+            <span class="status-badge">${isActive ? "نشط" : "غير نشط"}</span>
           </div>
         </div>
         <div class="actions">
@@ -921,21 +769,16 @@ async function saveProduct(e){
   try{
     let imageUrl = null;
     const file = $("image").files[0];
-
     if(file) imageUrl = await uploadImage(file);
 
     const id = $("productId").value;
     const active = $("active").checked;
 
     const product = {
-      name,
-      category,
-      price,
-      stock,
+      name,category,price,stock,
       unit:$("unit").value.trim() || "كجم",
       description:$("description").value.trim(),
-      active:active,
-      is_active:active
+      active:active,is_active:active
     };
 
     if(imageUrl) product.image_url = imageUrl;
@@ -943,23 +786,13 @@ async function saveProduct(e){
     let result;
 
     if(id){
-      result = await supabaseClient
-        .from("products")
-        .update(product)
-        .eq("id",id)
-        .select("id");
+      result = await supabaseClient.from("products").update(product).eq("id",id).select("id");
     }else{
-      result = await supabaseClient
-        .from("products")
-        .insert(product)
-        .select("id");
+      result = await supabaseClient.from("products").insert(product).select("id");
     }
 
     if(result.error) throw result.error;
-
-    if(!result.data || !result.data.length){
-      throw new Error("لم يتم حفظ المنتج. تأكد من صلاحيات الأدمن.");
-    }
+    if(!result.data || !result.data.length) throw new Error("لم يتم حفظ المنتج. تأكد من صلاحيات الأدمن.");
 
     showMessage("productMessage","تم حفظ المنتج والمخزون بنجاح ✅");
     resetProductForm();
@@ -974,11 +807,8 @@ async function saveProduct(e){
 }
 
 async function editProduct(id){
-  const {data,error} = await supabaseClient
-    .from("products")
-    .select("*")
-    .eq("id",id)
-    .single();
+  const {data,error} = await supabaseClient.from("products")
+    .select("*").eq("id",id).single();
 
   if(error){
     showMessage("productMessage",error.message,true);
@@ -1002,10 +832,7 @@ async function editProduct(id){
 async function deleteProduct(id){
   if(!confirm("هل أنت متأكد من حذف المنتج؟")) return;
 
-  const {error} = await supabaseClient
-    .from("products")
-    .delete()
-    .eq("id",id);
+  const {error} = await supabaseClient.from("products").delete().eq("id",id);
 
   if(error){
     showMessage("productMessage",error.message,true);
@@ -1031,14 +858,25 @@ $("cancelBtn").addEventListener("click",()=>{
 
 /* إدارة الطلبات */
 
+/* الحالات الجديدة المعتمدة فقط */
 const statusLabels = {
-  new:"جديد",
-  pending:"قيد المراجعة",
+  new:"طلب جديد",
   confirmed:"تم التأكيد",
-  preparing:"جاري التجهيز",
-  delivered:"تم التوصيل",
   cancelled:"ملغي"
 };
+
+function getStatusClass(status){
+  if(status === "new" || status === "pending") return "status-new";
+  if(status === "confirmed") return "status-confirmed";
+  if(status === "cancelled") return "status-cancelled";
+  return "status-legacy";
+}
+
+function getStatusLabel(status){
+  if(status === "pending") return "حالة قديمة: قيد الانتظار (pending)";
+  if(status === "delivered") return "حالة قديمة: تم التوصيل (delivered)";
+  return statusLabels[status] || ("حالة قديمة: " + String(status || "غير محددة"));
+}
 
 document.querySelector(".order-tabs").addEventListener("click",e=>{
   const btn = e.target.closest("button[data-tab]");
@@ -1056,16 +894,13 @@ document.querySelector(".order-tabs").addEventListener("click",e=>{
 
 $("orderSearch").addEventListener("input",()=>{
   clearTimeout(searchTimer);
-
   searchTimer = setTimeout(()=>{
     currentOrdersPage = 1;
     loadOrders();
   },400);
 });
 
-$("refreshOrders").addEventListener("click",()=>{
-  loadOrders();
-});
+$("refreshOrders").addEventListener("click",()=>loadOrders());
 
 $("prevOrders").addEventListener("click",()=>{
   if(currentOrdersPage > 1){
@@ -1079,24 +914,59 @@ $("nextOrders").addEventListener("click",()=>{
   loadOrders();
 });
 
+/* ملخص الطلبات: المؤكد فقط يدخل في الإجمالي */
+async function loadOrderSummary(){
+  try{
+    let allOrders = [];
+    let start = 0;
+    const batchSize = 500;
+
+    while(true){
+      const {data,error} = await supabaseClient.from("orders")
+        .select("status,total").range(start,start + batchSize - 1);
+
+      if(error) throw error;
+
+      const batch = data || [];
+      allOrders = allOrders.concat(batch);
+
+      if(batch.length < batchSize) break;
+      start += batchSize;
+    }
+
+    const confirmedOrders = allOrders.filter(order=>order.status === "confirmed");
+
+    const totalValue = confirmedOrders.reduce((sum,order)=>{
+      return sum + Number(order.total || 0);
+    },0);
+
+    $("summaryCount").textContent = allOrders.length;
+    $("summaryTotal").textContent = formatMoney(totalValue);
+
+  }catch(error){
+    $("summaryCount").textContent = "-";
+    $("summaryTotal").textContent = "تعذر الحساب";
+    console.error("Order summary error:",error);
+  }
+}
+
+/* تحميل قائمة الطلبات */
 async function loadOrders(){
   const requestNumber = ++ordersRequestNumber;
 
-  $("ordersList").innerHTML =
-    '<div class="loading">جاري تحميل الطلبات...</div>';
-
+  $("ordersList").innerHTML = '<div class="loading">جاري تحميل الطلبات...</div>';
   clearMessage("ordersMessage");
 
-  let query = supabaseClient
-    .from("orders")
+  let query = supabaseClient.from("orders")
     .select("*",{count:"exact"})
     .order("created_at",{ascending:false});
 
+  /* الطلبات الجديدة تشمل new وpending القديمة */
   if(currentTab === "new"){
     query = query.in("status",["new","pending"]);
-  }else if(currentTab !== "all"){
-    query = query.eq("status",currentTab);
   }
+
+  /* تبويب كل الطلبات يعرض كل الحالات بما فيها الحالات التاريخية */
 
   const search = $("orderSearch").value.trim();
 
@@ -1104,9 +974,14 @@ async function loadOrders(){
     const safe = search.replace(/[,%()]/g,"").trim();
 
     if(safe){
-      query = query.or(
-        `customer_name.ilike.%${safe}%,phone.ilike.%${safe}%,customer_phone.ilike.%${safe}%`
-      );
+      const conditions = [
+        `customer_name.ilike.%${safe}%`,
+        `phone.ilike.%${safe}%`,
+        `customer_phone.ilike.%${safe}%`
+      ];
+
+      if(/^\d+$/.test(safe)) conditions.push(`id.eq.${safe}`);
+      query = query.or(conditions.join(","));
     }
   }
 
@@ -1118,8 +993,7 @@ async function loadOrders(){
   if(requestNumber !== ordersRequestNumber) return;
 
   if(error){
-    $("ordersList").textContent =
-      "حصل خطأ في تحميل الطلبات: " + error.message;
+    $("ordersList").textContent = "حصل خطأ في تحميل الطلبات: " + error.message;
     $("ordersCount").textContent = "";
     $("ordersPageInfo").textContent = "";
     return;
@@ -1133,22 +1007,22 @@ async function loadOrders(){
     return loadOrders();
   }
 
-  $("ordersCount").textContent = "عدد الطلبات: " + total;
-  $("ordersPageInfo").textContent =
-    `صفحة ${currentOrdersPage} من ${totalPages}`;
+  $("ordersCount").textContent = "عدد الطلبات في القسم: " + total;
+  $("ordersPageInfo").textContent = `صفحة ${currentOrdersPage} من ${totalPages}`;
 
   $("prevOrders").disabled = currentOrdersPage <= 1;
   $("nextOrders").disabled = currentOrdersPage >= totalPages;
 
   if(!data || !data.length){
-    $("ordersList").innerHTML =
-      '<div class="empty-state">لا توجد طلبات في هذا القسم حاليًا</div>';
-    return;
+    $("ordersList").innerHTML = '<div class="empty-state">مفيش طلبات هنا حاليًا.</div>';
+  }else{
+    $("ordersList").innerHTML = data.map(renderOrder).join("");
   }
 
-  $("ordersList").innerHTML = data.map(renderOrder).join("");
+  await loadOrderSummary();
 }
 
+/* عرض تفاصيل الطلب */
 function renderOrder(order){
   const id = order.id;
   const items = Array.isArray(order.items) ? order.items : [];
@@ -1158,33 +1032,41 @@ function renderOrder(order){
     ? new Date(order.created_at).toLocaleString("ar-EG")
     : "غير محدد";
 
-  const status = statusLabels[order.status] || order.status || "غير محدد";
+  const status = getStatusLabel(order.status);
+  const statusClass = getStatusClass(order.status);
+
+  const knownStatus = Object.prototype.hasOwnProperty.call(statusLabels,order.status);
+
+  const statusOptions = Object.entries(statusLabels).map(([key,label])=>`
+    <option value="${key}" ${order.status === key ? "selected" : ""}>${label}</option>
+  `).join("");
+
+  /* الاحتفاظ بالحالة القديمة كخيار ظاهر دون تغييرها تلقائيًا */
+  const legacyOption = !knownStatus ? `
+    <option value="${escapeHTML(order.status || "")}" selected disabled>
+      ${escapeHTML(status)} — اختر حالة جديدة إذا أردت
+    </option>
+  ` : "";
 
   const itemsHTML = items.length ? `
     <div class="order-items-wrap">
       <table class="order-items">
         <thead>
-          <tr>
-            <th>المنتج</th>
-            <th>الكمية</th>
-            <th>السعر</th>
-            <th>الإجمالي</th>
-          </tr>
+          <tr><th>المنتج</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr>
         </thead>
         <tbody>
           ${items.map(item=>{
             const name = item.name || item.product_name || item.title || "منتج";
             const qty = item.qty ?? item.quantity ?? item.count ?? 1;
             const price = item.price ?? item.unit_price ?? 0;
-            const total = item.total ?? item.line_total ??
-              (Number(qty) * Number(price));
+            const total = item.total ?? item.line_total ?? (Number(qty) * Number(price));
 
             return `
               <tr>
                 <td>${escapeHTML(name)}</td>
                 <td>${escapeHTML(qty)}</td>
-                <td>${escapeHTML(price)} جنيه</td>
-                <td>${escapeHTML(total)} جنيه</td>
+                <td>${formatMoney(price)}</td>
+                <td>${formatMoney(total)}</td>
               </tr>
             `;
           }).join("")}
@@ -1195,67 +1077,94 @@ function renderOrder(order){
 
   return `
     <article class="order-card">
-      <div class="order-head">
-        <div>
-          <strong class="order-number">
-            طلب رقم #${escapeHTML(id)}
-          </strong>
-          <p><strong>${escapeHTML(order.customer_name || "بدون اسم")}</strong></p>
-          <p>${escapeHTML(order.phone || order.customer_phone || "")}</p>
+      <div class="order-card-top">
+        <div class="order-main-info">
+          <div class="order-number">رقم الطلب #${escapeHTML(id)}</div>
+          <div class="order-customer">${escapeHTML(order.customer_name || "بدون اسم")}</div>
+          <p class="order-phone">${escapeHTML(order.phone || order.customer_phone || "لا يوجد رقم هاتف")}</p>
           <p class="muted">${escapeHTML(date)}</p>
-          <p><span class="status-badge">${escapeHTML(status)}</span></p>
-          <div class="order-total">
-            الإجمالي: ${escapeHTML(order.total ?? 0)} جنيه
-          </div>
+          <span class="status-badge ${statusClass}">${escapeHTML(status)}</span>
+          <div class="order-total">${formatMoney(order.total)}</div>
         </div>
 
-        <div class="actions">
-          <button class="small secondary"
-            onclick="toggleOrder('${escapeHTML(id)}')">
-            ${expanded ? "إخفاء التفاصيل" : "عرض التفاصيل"}
-          </button>
-
-          <button class="small danger"
-            onclick="deleteOrder('${escapeHTML(id)}')">
-            حذف الطلب
+        <div class="order-card-actions">
+          <button class="small ${expanded ? "secondary" : ""}" onclick="toggleOrder('${escapeHTML(id)}')">
+            ${expanded ? "إخفاء التفاصيل ▲" : "عرض التفاصيل ▼"}
           </button>
         </div>
       </div>
 
       ${expanded ? `
         <div class="order-details">
-          <p><strong>الاسم:</strong> ${escapeHTML(order.customer_name || "")}</p>
-          <p><strong>الهاتف:</strong> ${escapeHTML(order.phone || order.customer_phone || "")}</p>
-          <p><strong>المحافظة:</strong> ${escapeHTML(order.governorate || "")}</p>
-          <p><strong>المنطقة:</strong> ${escapeHTML(order.area || "")}</p>
-          <p><strong>العنوان:</strong> ${escapeHTML(order.address || "")}</p>
-          <p><strong>ملاحظات:</strong> ${escapeHTML(order.notes || "لا توجد")}</p>
+          <h3 style="margin-top:0">تفاصيل الطلب</h3>
+
+          <div class="order-info-grid">
+            <div class="order-info-item">
+              <strong>اسم العميل</strong>
+              <span>${escapeHTML(order.customer_name || "غير مسجل")}</span>
+            </div>
+            <div class="order-info-item">
+              <strong>رقم الهاتف</strong>
+              <span>${escapeHTML(order.phone || order.customer_phone || "غير مسجل")}</span>
+            </div>
+            <div class="order-info-item">
+              <strong>المحافظة</strong>
+              <span>${escapeHTML(order.governorate || "غير محددة")}</span>
+            </div>
+            <div class="order-info-item">
+              <strong>المنطقة</strong>
+              <span>${escapeHTML(order.area || "غير محددة")}</span>
+            </div>
+            <div class="order-info-item" style="grid-column:1/-1">
+              <strong>العنوان بالتفصيل</strong>
+              <span>${escapeHTML(order.address || "غير مسجل")}</span>
+            </div>
+            <div class="order-info-item" style="grid-column:1/-1">
+              <strong>ملاحظات العميل</strong>
+              <span>${escapeHTML(order.notes || "لا توجد ملاحظات")}</span>
+            </div>
+          </div>
 
           <hr>
-          <strong>المنتجات المطلوبة</strong>
+          <h3>🛒 المنتجات المطلوبة</h3>
           ${itemsHTML}
 
-          <p>المجموع: ${escapeHTML(order.subtotal ?? 0)} جنيه</p>
-          <p>التوصيل: ${escapeHTML(order.delivery_fee ?? 0)} جنيه</p>
-          <p><strong>الإجمالي النهائي: ${escapeHTML(order.total ?? 0)} جنيه</strong></p>
+          <div class="order-info-grid">
+            <div class="order-info-item">
+              <strong>قيمة المنتجات</strong>
+              <span>${formatMoney(order.subtotal)}</span>
+            </div>
+            <div class="order-info-item">
+              <strong>رسوم التوصيل</strong>
+              <span>${formatMoney(order.delivery_fee)}</span>
+            </div>
+            <div class="order-info-item" style="grid-column:1/-1">
+              <strong>الإجمالي النهائي</strong>
+              <span style="color:var(--green-dark);font-size:19px">${formatMoney(order.total)}</span>
+            </div>
+          </div>
+
+          <div class="order-status-box">
+            <label for="status-${escapeHTML(id)}">حالة الطلب</label>
+            <div class="order-status-controls">
+              <select
+                id="status-${escapeHTML(id)}"
+                data-order-id="${escapeHTML(id)}"
+                data-original-status="${escapeHTML(order.status || "")}"
+                onchange="updateOrderStatus('${escapeHTML(id)}')">
+                ${legacyOption}
+                ${statusOptions}
+              </select>
+            </div>
+            <p class="muted order-status-hint">الحالة بتتحفظ تلقائيًا بمجرد اختيارها.</p>
+          </div>
+
+          <div class="order-danger-zone">
+            <span class="muted">حذف الطلب نهائي ولا يمكن التراجع عنه.</span>
+            <button class="small danger" onclick="deleteOrder('${escapeHTML(id)}')">🗑️ حذف الطلب</button>
+          </div>
         </div>
       ` : ""}
-
-      <div class="status-row">
-        <label>حالة الطلب:</label>
-        <select id="status-${escapeHTML(id)}">
-          ${Object.entries(statusLabels).map(([key,label])=>`
-            <option value="${key}" ${order.status === key ? "selected" : ""}>
-              ${label}
-            </option>
-          `).join("")}
-        </select>
-
-        <button class="small"
-          onclick="updateOrderStatus('${escapeHTML(id)}')">
-          حفظ الحالة
-        </button>
-      </div>
     </article>
   `;
 }
@@ -1263,83 +1172,75 @@ function renderOrder(order){
 function toggleOrder(id){
   id = String(id);
 
-  if(expandedOrders.has(id)){
-    expandedOrders.delete(id);
-  }else{
-    expandedOrders.add(id);
-  }
+  if(expandedOrders.has(id)) expandedOrders.delete(id);
+  else expandedOrders.add(id);
 
   loadOrders();
 }
 
+/* تحديث حالة الطلب */
 async function updateOrderStatus(id){
   const select = $("status-" + id);
-
-  if(!select) return;
+  if(!select || select.disabled) return;
 
   const newStatus = select.value;
+  const oldStatus = select.dataset.originalStatus || "";
 
   if(!statusLabels[newStatus]){
-    showMessage("ordersMessage","حالة الطلب غير صحيحة.",true);
+    select.value = oldStatus;
     return;
   }
 
-  const buttons = select.parentElement.querySelectorAll("button");
-  buttons.forEach(btn=>btn.disabled = true);
+  if(newStatus === oldStatus) return;
+
+  select.disabled = true;
+
+  const hint = select.parentElement.parentElement.querySelector(".order-status-hint");
+  if(hint) hint.textContent = "جاري حفظ الحالة...";
 
   try{
-    const {data,error} = await supabaseClient
-      .from("orders")
-      .update({status:newStatus})
-      .eq("id",id)
-      .select("id,status");
+    const {data,error} = await supabaseClient.from("orders")
+      .update({status:newStatus}).eq("id",id).select("id,status");
 
     if(error) throw error;
+    if(!data || !data.length) throw new Error("لم يتم تحديث الطلب. تأكد من صلاحيات الأدمن.");
 
-    if(!data || !data.length){
-      throw new Error("لم يتم تحديث الطلب. تأكد من صلاحيات الأدمن.");
-    }
-
-    showMessage(
-      "ordersMessage",
-      "تم تحديث حالة الطلب رقم #" + id + " بنجاح. ✅"
-    );
+    select.dataset.originalStatus = newStatus;
 
     await loadOrders();
 
-  }catch(error){
     showMessage(
       "ordersMessage",
-      "فشل تحديث الحالة: " + error.message,
-      true
+      "تم تحديث حالة الطلب رقم #" + id + " إلى " + statusLabels[newStatus] + " بنجاح ✅"
     );
-    buttons.forEach(btn=>btn.disabled = false);
+
+  }catch(error){
+    select.disabled = false;
+
+    const oldOption = Array.from(select.options).find(option=>option.value === oldStatus);
+
+    if(oldOption) select.value = oldStatus;
+    else select.value = "";
+
+    if(hint) hint.textContent = "فشل الحفظ. الحالة لم تتغير.";
+    showMessage("ordersMessage","فشل تحديث الحالة: " + error.message,true);
   }
 }
 
+/* حذف الطلب */
 async function deleteOrder(id){
-  if(!confirm(
-    "هل أنت متأكد من حذف الطلب رقم #" + id +
-    " نهائيًا؟ لا يمكن التراجع عن الحذف."
-  )) return;
+  if(!confirm("هل أنت متأكد من حذف الطلب رقم #" + id + " نهائيًا؟ لا يمكن التراجع عن الحذف.")) return;
 
   try{
-    const {data,error} = await supabaseClient
-      .from("orders")
-      .delete()
-      .eq("id",id)
-      .select("id");
+    const {data,error} = await supabaseClient.from("orders")
+      .delete().eq("id",id).select("id");
 
     if(error) throw error;
-
-    if(!data || !data.length){
-      throw new Error("لم يتم حذف الطلب. تأكد من صلاحيات الأدمن.");
-    }
+    if(!data || !data.length) throw new Error("لم يتم حذف الطلب. تأكد من صلاحيات الأدمن.");
 
     expandedOrders.delete(String(id));
-
-    showMessage("ordersMessage","تم حذف الطلب نهائيًا.");
     await loadOrders();
+    showMessage("ordersMessage","تم حذف الطلب بنجاح.");
 
   }catch(error){
     showMessage("ordersMessage","فشل حذف الطلب: " + error.message,true);
@@ -1347,7 +1248,6 @@ async function deleteOrder(id){
 }
 
 /* بدء التحقق من الجلسة */
-
 checkAdmin();
 </script>
 </body>
